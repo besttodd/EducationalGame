@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#1A48EA"
+    android:orientation="vertical"
+    tools:context=".SettingsFragment">
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="6dp"
+        android:src="@android:drawable/ic_notification_clear_all"
+        android:onClick="settingsClicked" />
+
+    <Switch
+        android:id="@+id/musicSwitch"
+        style="@style/settingsTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:checked="true"
+        android:text="@string/music" />
+
+    <Switch
+        android:id="@+id/soundSwitch"
+        style="@style/settingsTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:checked="true"
+        android:text="@string/sound" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="@string/difficulty" />
+
+    <Spinner
+        android:id="@+id/settingsdifficulty"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="top"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="16dp"
+        android:entries="@array/difficultyLevels" />
+
+</LinearLayout>
