@@ -7,14 +7,16 @@ public class Tile {
     private int image;
     private int lightedImage;
     private int activeTile;
+    private int previous;
     private String shape;
     boolean on;
 
-    public Tile(int imageResource) {
+    Tile(int imageResource) {
         //tileImage = imageResource;
         image = imageResource;
         lightedImage = imageResource + 1;
         activeTile = imageResource;
+        previous = 0;
         on = false;
     }
 
@@ -22,13 +24,13 @@ public class Tile {
         return activeTile;
     }
 
-    public void lightUp() {
+    void lightUp() {
         activeTile = lightedImage;
         System.out.println("Light UP"+activeTile+"-------------------------------------------------");
         on = true;
     }
 
-    public void lightOff() {
+    void lightOff() {
         activeTile = image;
         on = false;
     }

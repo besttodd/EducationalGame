@@ -1,30 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MemoryActivity">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/timeAndScore"
+            android:name="au.edu.jcu.cp3406.educationalgame.StatusFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"/>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings_button"
+            android:onClick="settingsClicked"
+            app:srcCompat="@android:drawable/ic_menu_preferences"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:text="@string/remember_the_order" />
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:numColumns="auto_fit" />
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="au.edu.jcu.cp3406.educationalgame.SettingsFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:text="Remember the order." />
-
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:columnWidth="100dp"
-        android:verticalSpacing="24sp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="spacingWidthUniform"
-        android:layout_margin="16dp"
-        android:numColumns="auto_fit">
-    </GridView>
-
-</LinearLayout>
+        android:tag="settingsFragment"
+        tools:layout="@layout/fragment_settings" />
+</FrameLayout>

@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
                     level = Difficulty.valueOf(selection.toUpperCase());
                     listener.onUpdate(State.RESTART, level);
                 } else {
-                    listener.onUpdate(State.CONTINUE, level);
+                    listener.onUpdate(State.SETTINGS, level);
                 }
             }
         });
