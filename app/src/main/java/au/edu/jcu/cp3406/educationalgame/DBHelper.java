@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.Locale;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "high_scores";
+    private static final String DB_NAME = "HIGHSCORES";
     private static final int VERSION = 1;
 
     DBHelper(Context context) {
@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "DATE TEXT," +
                     "DIFFICULTY TEXT," +
                     "SCORE INTEGER);");
-            insertScore(db, "3rd March", "EASY", 150);
+            insertScore(db, "03-05-20", "EASY", 100);
         }
         if (oldVersion < 2) {
             //db.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC;");

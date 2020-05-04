@@ -11,7 +11,7 @@ public class TileAdapter extends BaseAdapter {
     private final Context mContext;
     private final Tile[] tiles;
 
-    public TileAdapter(Context context, Tile[] tiles) {
+    TileAdapter(Context context, Tile[] tiles) {
         this.mContext = context;
         this.tiles = tiles;
     }

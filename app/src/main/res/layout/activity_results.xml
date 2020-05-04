@@ -11,10 +11,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/finished"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:layout_margin="20dp" />
+
+    <TextView
+        android:id="@+id/highScoreNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="16dp"
+        android:textSize="32sp"
+        android:textColor="@color/darkBlue" />
 
     <TextView
         android:id="@+id/finalScore"
@@ -24,5 +33,27 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:layout_margin="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="@string/play_again"
+        android:onClick="restart"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="@string/main_menu"
+        android:onClick="mainMenu"/>
+    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

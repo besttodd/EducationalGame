@@ -13,4 +13,14 @@
     <string name="settings_button">Settings Button</string>
     <string name="difficulty">Difficulty:</string>
     <string name="remember_the_order">Remember the order.</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="play_again">Play Again?</string>
+    <string name="back">Back</string>
+    <string name="id">ID</string>
+    <string name="date">Date</string>
+    <string name="level">Level</string>
+    <string name="score">Score</string>
+    <string name="select_the_higher">Select the - HIGHER</string>
+    <string name="equal">Equal</string>
+    <string name="settings_button">Settings Button</string>
 </resources>

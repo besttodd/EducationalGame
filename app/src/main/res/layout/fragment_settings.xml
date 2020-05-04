@@ -14,7 +14,7 @@
         android:layout_gravity="end"
         android:layout_margin="6dp"
         android:src="@android:drawable/ic_notification_clear_all"
-        android:onClick="settingsClicked" />
+        android:contentDescription="@string/settings_button" />
 
     <Switch
         android:id="@+id/musicSwitch"

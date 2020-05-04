@@ -3,8 +3,6 @@ package au.edu.jcu.cp3406.educationalgame;
 import java.util.Random;
 
 class HLGame {
-    String difficulty;
-    String task;
     private String card1;
     private String card2;
     private int c1Answer;

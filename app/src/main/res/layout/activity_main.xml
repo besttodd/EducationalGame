@@ -28,7 +28,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_margin="16dp"
-            android:onClick="startHLGame"/>
+            android:onClick="startHLGame"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_margin="16dp"
-            android:onClick="startMemoryGame"/>
+            android:onClick="startMemoryGame"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
     <Spinner

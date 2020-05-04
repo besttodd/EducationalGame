@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void highScoresClicked(View view) {
         Intent intent = new Intent(this, ScoresActivity.class);
-        //intent.putExtra("difficulty", level);
-        startActivity(intent);
+        startActivityForResult(intent, ScoresActivity.SETTINGS_REQUEST);
     }
 }

@@ -10,14 +10,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ScoresAdapter extends BaseAdapter {
-    Context context;
-    ArrayList<String> entryId;
-    ArrayList<String> date;
-    ArrayList<String> difficulty;
-    ArrayList<Integer> score;
+    private Context context;
+    private ArrayList<String> entryId;
+    private ArrayList<String> date;
+    private ArrayList<String> difficulty;
+    private ArrayList<Integer> score;
 
-    public ScoresAdapter (Context context, ArrayList<String> id,
-                          ArrayList<String> date, ArrayList<String> difficulty, ArrayList<Integer> score) {
+    ScoresAdapter(Context context, ArrayList<String> id,
+                  ArrayList<String> date, ArrayList<String> difficulty, ArrayList<Integer> score) {
         this.context = context;
         entryId = id;
         this.date = date;
@@ -64,7 +64,7 @@ public class ScoresAdapter extends BaseAdapter {
         return child;
     }
 
-    public class Holder {
+    public static class Holder {
         TextView textviewid;
         TextView textviewdate;
         TextView textviewdifficulty;

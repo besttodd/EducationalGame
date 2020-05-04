@@ -5,12 +5,6 @@ public class Timer {
     private long seconds;
     private long minutes;
 
-    Timer() {
-        isRunning = false;
-        minutes = 0;
-        seconds = 0;
-    }
-
     Timer(String current) {
         isRunning = false;
         seconds = Integer.parseInt(current.substring(current.length()-2));

@@ -5,11 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,11 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static au.edu.jcu.cp3406.educationalgame.Difficulty.EASY;
-
 public class HigherLowerGameActivity extends AppCompatActivity implements StateListener {
-    private StateListener listener;
-    private Context context;
     Timer timer;
     HLGame game = new HLGame();
     Difficulty level;
@@ -36,8 +30,6 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_higher_lower_game);
-
-        listener = (StateListener) context;
 
         level = (Difficulty) getIntent().getSerializableExtra("difficulty");
 
@@ -60,6 +52,7 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
                 soundManager.muteUnMuteSound();
                 break;
             case MUSIC:
+                soundManager.muteUnMuteMusic();
                 break;
             case RESTART:
                 intent = getIntent();
@@ -68,11 +61,16 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;
-            case CONTINUE:
+            case SETTINGS:
                 showHideFragment(settingsFragment);
+                break;
+            case SHAKE:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case GAME_OVER:
                 intent = new Intent(this, ResultsActivity.class);
+                intent.putExtra("difficulty", level);
                 intent.putExtra("score", game.getScore());
                 startActivity(intent);
                 break;
@@ -160,5 +158,11 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         }
 
         ft.commit();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        soundManager.closeAudio();
     }
 }

@@ -3,11 +3,13 @@ package au.edu.jcu.cp3406.educationalgame;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class ScoresActivity extends AppCompatActivity {
+    public static int SETTINGS_REQUEST = 222;
     private SQLiteDatabase db;
     private Cursor cursor;
 
@@ -36,7 +39,8 @@ public class ScoresActivity extends AppCompatActivity {
         ListView listScores = findViewById(R.id.highScoresList);
         try {
             db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM HIGHSCORES", null);
+            cursor = db.query("HIGHSCORES", new String[] {"_id", "DATE", "DIFFICULTY", "SCORE"},
+                    null, null, null, null, "SCORE"+ " DESC");
 
             if (cursor.moveToFirst()) {
                 do { idList.add(cursor.getString(cursor.getColumnIndex("_id")));
@@ -60,5 +64,11 @@ public class ScoresActivity extends AppCompatActivity {
         super.onDestroy();
         cursor.close();
         db.close();
+    }
+
+    public void backClicked(View view) {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
