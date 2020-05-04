@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,23 +28,55 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
     SoundManager soundManager;
     Fragment settingsFragment;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_higher_lower_game);
 
+        soundManager = new SoundManager();
+        soundManager.loadSounds(this);
+        soundManager.playMusic();
+
+        //ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager != null) {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Log.i("Sensor detection", "No accelerometer fond on device");
+        }
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake() {
+                handleShakeEvent();
+            }
+        });
+
         level = (Difficulty) getIntent().getSerializableExtra("difficulty");
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
 
-        soundManager = new SoundManager();
-        soundManager.loadSounds(this);
         timer = new Timer("00:10");
         startTimer();
         newRound(level);
         showHideFragment(settingsFragment);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 
     public void onUpdate(State state, Difficulty level) {
@@ -52,7 +87,8 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
                 soundManager.muteUnMuteSound();
                 break;
             case MUSIC:
-                soundManager.muteUnMuteMusic();
+                if (soundManager.isMusicMuted()) { soundManager.resumeMusic(); }
+                else { soundManager.pauseMusic(); }
                 break;
             case RESTART:
                 intent = getIntent();
@@ -160,9 +196,15 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         ft.commit();
     }
 
+    void handleShakeEvent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onDestroy(){
         super.onDestroy();
         soundManager.closeAudio();
+        handler.removeCallbacks(runnable);
     }
 }

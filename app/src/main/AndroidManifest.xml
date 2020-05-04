@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="au.edu.jcu.cp3406.educationalgame">
 
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScoresActivity"></activity>
+        <activity android:name=".ScoresActivity" />
         <activity android:name=".MemoryActivity" />
         <activity android:name=".ResultsActivity" />
         <activity android:name=".HigherLowerGameActivity" />
