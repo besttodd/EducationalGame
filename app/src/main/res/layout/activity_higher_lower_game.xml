@@ -10,6 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include layout="@layout/toolbar_main"
+            android:id="@+id/toolbar" />
 
         <fragment
             android:id="@+id/timeAndScore"
@@ -17,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <TextView
             android:id="@+id/conditionDisplay"
@@ -58,21 +60,12 @@
             android:layout_height="wrap_content"
             android:onClick="checkSelected"
             android:text="@string/equal"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card2Button" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/settings_button"
-            android:onClick="settingsClicked"
-            app:srcCompat="@android:drawable/ic_menu_preferences"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="16dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <fragment
@@ -83,6 +76,5 @@
         android:layout_gravity="center"
         android:tag="settingsFragment"
         tools:layout="@layout/fragment_settings" />
-
 
 </FrameLayout>

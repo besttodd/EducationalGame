@@ -1,6 +1,7 @@
 package au.edu.jcu.cp3406.educationalgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;

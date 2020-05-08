@@ -1,6 +1,15 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.TextView;
+
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 

@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "DATE TEXT," +
                     "DIFFICULTY TEXT," +
                     "SCORE INTEGER);");
-            insertScore(db, "03-05-20", "EASY", 100);
+            insertScore(db, "03-05-20", "EASY", 50);
         }
         if (oldVersion < 2) {
             //db.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC;");

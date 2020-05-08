@@ -1,6 +1,7 @@
 package au.edu.jcu.cp3406.educationalgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,6 +40,8 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_higher_lower_game);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         soundManager = new SoundManager();
         soundManager.loadSounds(this);
@@ -61,10 +66,33 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
 
-        timer = new Timer("00:10");
+        Button equals = findViewById(R.id.equalButton);
+        if (level == Difficulty.MASTER) {
+            equals.setVisibility(View.VISIBLE);
+        }
+
+        timer = new Timer("00:15");
         startTimer();
         newRound(level);
         showHideFragment(settingsFragment);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_open_settings:
+                showHideFragment(settingsFragment);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

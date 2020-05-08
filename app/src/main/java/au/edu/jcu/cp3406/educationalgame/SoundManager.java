@@ -31,9 +31,9 @@ public class SoundManager extends Activity {
     }
 
     void playMusic() {
-        do {
+        //do {
             streamId = soundPool.play(sounds[2], 1, 1, 1, 0, 1);
-        } while(streamId==0);
+        //} while(streamId==0);
     }
 
     void muteUnMuteSound() {
