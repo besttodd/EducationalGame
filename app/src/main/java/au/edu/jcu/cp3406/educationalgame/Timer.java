@@ -7,27 +7,34 @@ public class Timer {
 
     Timer(String current) {
         isRunning = false;
-        seconds = Integer.parseInt(current.substring(current.length()-2));
+        seconds = Integer.parseInt(current.substring(current.length() - 2));
         minutes = Integer.parseInt(current.substring(1, 2));
     }
 
     void tick() {
-        if (seconds > 0) { seconds--; }
-        else if (minutes > 0) {
+        if (seconds > 0) {
+            seconds--;
+        } else if (minutes > 0) {
             seconds = 59;
             minutes--;
-        }else {
+        } else {
             stopTimer();
         }
     }
 
-    void startTimer() { isRunning = true; }
+    void startTimer() {
+        isRunning = true;
+    }
 
-    private void stopTimer() { isRunning = false; }
+    private void stopTimer() {
+        isRunning = false;
+    }
 
-    boolean isRunning() { return isRunning; }
+    boolean isRunning() {
+        return isRunning;
+    }
 
-    public String toString(){
+    public String toString() {
         return String.format("%02d", minutes) + ":"
                 + String.format("%02d", seconds);
     }

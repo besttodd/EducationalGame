@@ -1,10 +1,10 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,13 +15,11 @@ import android.widget.Switch;
 
 import java.util.Objects;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends Fragment {
+    private Context context;
     private StateListener listener;
     private Difficulty level;
+    SoundManager soundManager;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -31,8 +29,11 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
         listener = (StateListener) context;
         level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
+        if (level == null) { level = Difficulty.EASY; }
+        soundManager = ((SoundManager) context.getApplicationContext());
     }
 
     @Override
@@ -44,27 +45,21 @@ public class SettingsFragment extends Fragment {
         final Switch sound = view.findViewById(R.id.soundSwitch);
         final Switch music = view.findViewById(R.id.musicSwitch);
         final Spinner spinner = view.findViewById(R.id.settingsdifficulty);
+
+        music.setChecked(soundManager.isMusicOn());
         spinner.setSelection(getIndex(spinner, level));
 
         sound.setOnClickListener(new Switch.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sound.isChecked()) {
-                    listener.onUpdate(State.SOUND, level);
-                } else {
-                    listener.onUpdate(State.SOUND, level);
-                }
+                listener.onUpdate(State.SOUND, level);
             }
         });
 
         music.setOnClickListener(new Switch.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (music.isChecked()) {
-                    listener.onUpdate(State.MUSIC, level);
-                } else {
-                    listener.onUpdate(State.MUSIC, level);
-                }
+                soundManager.muteUnMuteMusic();
             }
         });
 
@@ -87,10 +82,11 @@ public class SettingsFragment extends Fragment {
     private int getIndex(Spinner spinner, Difficulty level) {
         int index = 0;
 
-        for (int i = 0; i < spinner.getCount(); i++){
+        for (int i = 0; i < spinner.getCount(); i++) {
             String selection = spinner.getItemAtPosition(i).toString().toUpperCase();
             if (selection.equals(level.toString())) {
-                index = i; }
+                index = i;
+            }
         }
         return index;
     }

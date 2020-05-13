@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "HIGHSCORES";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     DBHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
         updateDatabase(db, oldVersion, newVersion);
     }
 
-    public void insertScore(SQLiteDatabase db, String date, String difficulty, int score) {
+    void insertScore(SQLiteDatabase db, String date, int difficulty, int score) {
         ContentValues scoreDetails = new ContentValues();
         scoreDetails.put("DATE", date);
         scoreDetails.put("DIFFICULTY", difficulty);
@@ -43,10 +43,15 @@ public class DBHelper extends SQLiteOpenHelper {
                     "DATE TEXT," +
                     "DIFFICULTY TEXT," +
                     "SCORE INTEGER);");
-            insertScore(db, "03-05-20", "EASY", 50);
+            //insertScore(db, "03-05-20", "EASY", 50);
         }
         if (oldVersion < 2) {
-            //db.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC;");
+            db.execSQL("DROP TABLE HIGHSCORES");
+            db.execSQL("CREATE TABLE HIGHSCORES (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "DATE TEXT," +
+                    "DIFFICULTY INTEGER," +
+                    "SCORE INTEGER);");
+            insertScore(db, "03-05-20", 1, 50);
         }
     }
 }

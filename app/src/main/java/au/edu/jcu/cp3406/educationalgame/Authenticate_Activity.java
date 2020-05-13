@@ -1,7 +1,5 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +12,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-public class Authenticate_Activity extends AppCompatActivity {
+public class Authenticate_Activity extends BaseActivity {
     private WebView webView;
     private TextView info;
     private Twitter twitter = TwitterFactory.getSingleton();
@@ -24,7 +22,6 @@ public class Authenticate_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticate);
-        System.out.println("AuthenticateOnCreate()------------------------------------------------------");
         info = findViewById(R.id.info);
         webView = findViewById(R.id.web_view);
 

@@ -73,8 +73,7 @@ class HLGame {
 
         //Make sure answers are not equal - except for Master difficulty
         if (level != Difficulty.MASTER) {
-            while (c1Answer == c2Answer)
-            {
+            while (c1Answer == c2Answer) {
                 newCard = generateCard(level).split(" ");
                 card2 = newCard[0] + "\n" + newCard[1] + "  " + newCard[2];
                 c2Answer = Integer.parseInt(newCard[3]);
@@ -86,19 +85,28 @@ class HLGame {
         score = score + points;
     }
 
-    int getScore() { return score; }
+    int getScore() {
+        return score;
+    }
 
-    String getCard1() { return card1; }
+    String getCard1() {
+        return card1;
+    }
 
-    String getCard2() { return card2; }
+    String getCard2() {
+        return card2;
+    }
 
     boolean checkCards(int selected, String task) {
         switch (task) {
             case "Higher":
                 if (selected == 3) {
-                    if (c1Answer == c2Answer) {return true;}
-                } else if (selected == 2) { return c2Answer > c1Answer; }
-                else return c1Answer > c2Answer;
+                    if (c1Answer == c2Answer) {
+                        return true;
+                    }
+                } else if (selected == 2) {
+                    return c2Answer > c1Answer;
+                } else return c1Answer > c2Answer;
             case "Lower":
                 return false;
         }

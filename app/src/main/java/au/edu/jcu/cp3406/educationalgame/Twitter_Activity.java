@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -28,12 +29,13 @@ public class Twitter_Activity extends AppCompatActivity {
     private Twitter twitter = TwitterFactory.getSingleton();
     private User user;
     private List<Tweet> tweets;
+    private String tweetText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twitter);
-        System.out.println("TwitterOnCreate()---------------------------------------------------------");
+
         userInfo = findViewById(R.id.user_info);
         ListView tweetList = findViewById(R.id.tweets);
         authenticate = findViewById(R.id.authorise);
@@ -46,7 +48,6 @@ public class Twitter_Activity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("TwitterOnStart()---------------------------------------------------------");
 
         Background.run(new Runnable() {
             @Override
@@ -56,9 +57,10 @@ public class Twitter_Activity extends AppCompatActivity {
                 if (isAuthorised()) {
 
                     try {
-                        twitter.updateStatus("hello world!");
+                        tweetText = Objects.requireNonNull(getIntent().getExtras()).getString("highScore");
+                        twitter.updateStatus(tweetText);
                     } catch (TwitterException ignored) {
-                        Log.i("TwitterTweet","UpdateStatus Failed");
+                        Log.i("TwitterTweet", "UpdateStatus Failed");
                     }
 
                     text = user.getScreenName();
@@ -83,7 +85,9 @@ public class Twitter_Activity extends AppCompatActivity {
         });
     }
 
-    public void authorise(View view) { authorise(); }
+    public void authorise(View view) {
+        authorise();
+    }
 
     public void authorise() {
         Intent intent = new Intent(this, Authenticate_Activity.class);

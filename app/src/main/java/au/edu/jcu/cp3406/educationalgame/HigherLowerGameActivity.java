@@ -1,6 +1,5 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -21,16 +20,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HigherLowerGameActivity extends AppCompatActivity implements StateListener {
+public class HigherLowerGameActivity extends BaseActivity implements StateListener {
+    static String GAME_TIME = "00:15";
+    static int POINTS_CORRECT = 10;
+    static int POINTS_INCORRECT = 5;
     Timer timer;
     HLGame game = new HLGame();
     Difficulty level;
     final Handler handler = new Handler();
     Runnable runnable;
     boolean result = false;
-    SoundManager soundManager;
     Fragment settingsFragment;
-
+    SoundManager soundManager;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
@@ -43,15 +44,20 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        soundManager = new SoundManager();
-        soundManager.loadSounds(this);
-        soundManager.playMusic();
+        /*if (soundManager == null) {
+            soundManager = new SoundManager(this);
+            if (soundManager.audioReady()) {
+                soundManager.playMusic();
+            }
+        }*/
+        //soundManager.setSoundManager(this);
+        soundManager = ((SoundManager) getApplication());
 
         //ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager != null) {
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            Log.i("Sensor detection", "No accelerometer fond on device");
+            Log.i("Sensor detection", "No accelerometer found on device");
         }
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
@@ -65,21 +71,21 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
+        showHideFragment(settingsFragment);
 
         Button equals = findViewById(R.id.equalButton);
         if (level == Difficulty.MASTER) {
             equals.setVisibility(View.VISIBLE);
         }
 
-        timer = new Timer("00:15");
+        timer = new Timer(GAME_TIME);
         startTimer();
         newRound(level);
-        showHideFragment(settingsFragment);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the app bar.
+        // Inflate menu to the app bar.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -88,6 +94,7 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_settings:
+                //setSettingOptions();
                 showHideFragment(settingsFragment);
                 return true;
             default:
@@ -103,8 +110,18 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
 
     @Override
     public void onPause() {
-        mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
+        mSensorManager.unregisterListener(mShakeDetector);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     public void onUpdate(State state, Difficulty level) {
@@ -113,10 +130,6 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         switch (state) {
             case SOUND:
                 soundManager.muteUnMuteSound();
-                break;
-            case MUSIC:
-                if (soundManager.isMusicMuted()) { soundManager.resumeMusic(); }
-                else { soundManager.pauseMusic(); }
                 break;
             case RESTART:
                 intent = getIntent();
@@ -161,15 +174,15 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
             Toast message = Toast.makeText(this, "CORRECT", Toast.LENGTH_SHORT);
             message.setGravity(Gravity.CENTER, 0, 0);
             message.show();
-            soundManager.playSound(0);
-            game.setScore(10);
+            soundManager.playSound(1);
+            game.setScore(POINTS_CORRECT);
             score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
         } else {
             Toast notDone = Toast.makeText(this, "WRONG", Toast.LENGTH_SHORT);
             notDone.setGravity(Gravity.CENTER, 0, 0);
             notDone.show();
-            soundManager.playSound(1);
-            game.setScore(-5);
+            soundManager.playSound(0);
+            game.setScore(POINTS_INCORRECT);
             score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
         }
         newRound(level);
@@ -185,7 +198,7 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
                 timer.tick();
                 time.setText(String.format("Time: %s", timer.toString()));
                 if (timer.isRunning()) {
-                    System.out.println("TICK TICK TICK TICK");
+                    Log.i("Timer", "TICK TICK TICK TICK");
                     handler.postDelayed(this, 1000);
                 } else {
                     onUpdate(State.GAME_OVER, level);
@@ -206,23 +219,24 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
         }
     }
 
-    public void settingsClicked(View view) {
-        showHideFragment(settingsFragment);
-    }
-
-    public void showHideFragment(Fragment fragment){
+    public void showHideFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (settingsFragment.isHidden()) {
             ft.show(fragment);
-            Log.d("hidden","Show");
         } else {
             ft.hide(fragment);
-            Log.d("Shown","Hide");
         }
 
         ft.commit();
     }
+
+    /*void setSettingOptions() {
+        Bundle settingsOptions = new Bundle();
+        settingsOptions.putBoolean("music", musicOn);
+        //settingsOptions.putSerializable("sound", soundOn);
+        settingsFragment.setArguments(settingsOptions);
+    }*/
 
     void handleShakeEvent() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -230,9 +244,9 @@ public class HigherLowerGameActivity extends AppCompatActivity implements StateL
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        soundManager.closeAudio();
+        //soundManager.closeAudio();
         handler.removeCallbacks(runnable);
     }
 }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MemoryActivity extends AppCompatActivity implements StateListener {
+public class MemoryActivity extends BaseActivity implements StateListener {
     private StateListener listener;
     private Context context;
     private Tile[] tiles =
