@@ -15,14 +15,16 @@ public class ScoresAdapter extends BaseAdapter {
     private ArrayList<String> date;
     private ArrayList<String> difficulty;
     private ArrayList<Integer> score;
+    private ArrayList<String> game;
 
     ScoresAdapter(Context context, ArrayList<String> id,
-                  ArrayList<String> date, ArrayList<String> difficulty, ArrayList<Integer> score) {
+                  ArrayList<String> date, ArrayList<String> difficulty, ArrayList<Integer> score, ArrayList<String> game) {
         this.context = context;
         entryId = id;
         this.date = date;
         this.difficulty = difficulty;
         this.score = score;
+        this.game = game;
     }
 
     public int getCount() {
@@ -51,6 +53,7 @@ public class ScoresAdapter extends BaseAdapter {
             holder.textviewdate = child.findViewById(R.id.textViewDATE);
             holder.textviewdifficulty = child.findViewById(R.id.textViewDIFFICULTY);
             holder.textviewscore = child.findViewById(R.id.textViewSCORE);
+            holder.textviewgame = child.findViewById(R.id.textViewGAME);
             child.setTag(holder);
         } else {
             holder = (Holder) child.getTag();
@@ -60,6 +63,7 @@ public class ScoresAdapter extends BaseAdapter {
         holder.textviewdate.setText(date.get(position));
         holder.textviewdifficulty.setText(difficulty.get(position));
         holder.textviewscore.setText(String.valueOf(score.get(position)));
+        holder.textviewgame.setText(game.get(position));
 
         return child;
     }
@@ -69,5 +73,6 @@ public class ScoresAdapter extends BaseAdapter {
         TextView textviewdate;
         TextView textviewdifficulty;
         TextView textviewscore;
+        TextView textviewgame;
     }
 }

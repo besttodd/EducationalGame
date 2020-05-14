@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,11 +25,13 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     private Fragment settingsFragment;
     private SQLiteDatabase db;
     private Cursor cursor;
+    private Game game;
 
     ArrayList<String> idList = new ArrayList<>();
     ArrayList<String> dateList = new ArrayList<>();
     ArrayList<String> difficultyList = new ArrayList<>();
     ArrayList<Integer> scoreList = new ArrayList<>();
+    ArrayList<String> gameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +47,15 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);
 
+        //game = tabView.getText()  <----------- need to implement
+        game = Game.MATHS;
+
         DBHelper dbhelper = new DBHelper(this);
 
         ListView listScores = findViewById(R.id.highScoresList);
         try {
             db = dbhelper.getReadableDatabase();
-            cursor = db.query("HIGHSCORES", new String[]{"_id", "DATE", "DIFFICULTY", "SCORE"},
+            cursor = db.query("HIGHSCORES", new String[]{"_id", "DATE", "DIFFICULTY", "SCORE", "GAME"},
                     null, null, null, null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
 
             if (cursor.moveToFirst()) {
@@ -58,10 +64,11 @@ public class ScoresActivity extends BaseActivity implements StateListener {
                     dateList.add(cursor.getString(cursor.getColumnIndex("DATE")));
                     difficultyList.add(convert(cursor.getInt(cursor.getColumnIndex("DIFFICULTY"))));
                     scoreList.add(cursor.getInt(cursor.getColumnIndex("SCORE")));
+                    gameList.add(cursor.getString(cursor.getColumnIndex("GAME")));
                 } while (cursor.moveToNext());
             }
 
-            ScoresAdapter scoresAdapter = new ScoresAdapter(ScoresActivity.this, idList, dateList, difficultyList, scoreList);
+            ScoresAdapter scoresAdapter = new ScoresAdapter(ScoresActivity.this, idList, dateList, difficultyList, scoreList, gameList);
             listScores.setAdapter(scoresAdapter);
         } catch (SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
@@ -136,7 +143,9 @@ public class ScoresActivity extends BaseActivity implements StateListener {
                 break;
             case SHAKE:
             case RESTART:
-                Intent intent = new Intent(this, HigherLowerGameActivity.class);
+                Intent intent;
+                if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
+                else { intent = new Intent(this, MemoryActivity.class); }
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;

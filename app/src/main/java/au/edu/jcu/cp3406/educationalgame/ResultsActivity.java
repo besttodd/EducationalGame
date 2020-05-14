@@ -52,22 +52,23 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         int convertedLevel = convert(level);
         int newScore = Objects.requireNonNull(getIntent().getExtras()).getInt("score");
         scoreDisplay.setText(String.valueOf(newScore));
-        highScoreTweet = "My new High Score on Maths Master is " + newScore;
+        highScoreTweet = "My new High Score on "+ game + " MASTER is " + newScore;
 
         DBHelper dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
-        cursor = db.query("HIGHSCORES", new String[]{"_id", "DIFFICULTY", "SCORE"},
-                null, null, null, null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
+        cursor = db.query("HIGHSCORES", new String[]{"_id", "DIFFICULTY", "SCORE", "GAME"},
+                null, null, "GAME", null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
 
         if (cursor.getCount() < MAX_SCORES) {
-            saveScore(dbhelper, newScore, convertedLevel);
+            saveScore(dbhelper, newScore, convertedLevel, game.toString());
         } else {
             for (int i = 0; i < 10; i++) {
                 cursor.moveToNext();
                 int existingScore = cursor.getInt(2);
+                String exitingGame = cursor.getString(3);
                 //int existigLevel = cursor.getInt(1);
-                if (newScore > existingScore) {
-                    saveScore(dbhelper, newScore, convertedLevel);
+                if (newScore > existingScore && !exitingGame.equals(game.toString())) {
+                    saveScore(dbhelper, newScore, convertedLevel, game.toString());
                     break;
                 }
             }
@@ -110,8 +111,8 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         db.close();
     }
 
-    void saveScore(DBHelper dbhelper, int newScore, int newLevel) {
-        dbhelper.insertScore(db, getDate(), newLevel, newScore);
+    void saveScore(DBHelper dbhelper, int newScore, int newLevel, String game) {
+        dbhelper.insertScore(db, getDate(), newLevel, newScore, game);
         highScore.setText("Well Done\nYou got a HIGH SCORE!");
         tweetImage.setVisibility(View.VISIBLE);
         Log.i("Results", "New high score added!");
@@ -141,7 +142,9 @@ public class ResultsActivity extends BaseActivity implements StateListener {
     }
 
     public void restart(View view) {
-        Intent intent = new Intent(this, HigherLowerGameActivity.class);
+        Intent intent;
+        if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
+        else { intent = new Intent(this, MemoryActivity.class); }
         intent.putExtra("difficulty", level);
         startActivity(intent);
     }
@@ -171,7 +174,9 @@ public class ResultsActivity extends BaseActivity implements StateListener {
                 break;
             case SHAKE:
             case RESTART:
-                Intent intent = new Intent(this, HigherLowerGameActivity.class);
+                Intent intent;
+                if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
+                else { intent = new Intent(this, MemoryActivity.class); }
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;

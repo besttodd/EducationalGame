@@ -145,6 +145,7 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
                 intent = new Intent(this, ResultsActivity.class);
                 intent.putExtra("difficulty", level);
                 intent.putExtra("score", game.getScore());
+                intent.putExtra("game", Game.MATHS);
                 startActivity(intent);
                 break;
         }

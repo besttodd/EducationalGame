@@ -14,7 +14,7 @@ public class SoundManager extends Application {
     private boolean loaded;
 
     public SoundManager() {
-        sounds = new int[3];
+        sounds = new int[4];
         soundOn = 1;
         musicOn = true;
         streamId = -1;
@@ -41,6 +41,7 @@ public class SoundManager extends Application {
     }
 
     private void loadSounds(Context context) {
+        sounds[3] = soundPool.load(context, R.raw.light_up, 0);
         sounds[2] = soundPool.load(context, R.raw.as_time_passes_zapsplat, 0);
         sounds[1] = soundPool.load(context, R.raw.correct, 0);
         sounds[0] = soundPool.load(context, R.raw.incorrect, 0);
@@ -51,7 +52,7 @@ public class SoundManager extends Application {
     }
 
     void playMusic() {
-        streamId = soundPool.play(sounds[2], 1, 1, 1, 5, 1);
+        streamId = soundPool.play(sounds[2], 1, 1, 1, 6, 1);
     }
 
     void muteUnMuteSound() {

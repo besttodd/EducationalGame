@@ -1,7 +1,5 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,6 +10,7 @@ class MemoryGame {
     private int numTiles;
     private boolean complete;
     private int score;
+    private int speed;
 
     MemoryGame() {
         sequence = new ArrayList<>();
@@ -19,21 +18,26 @@ class MemoryGame {
         numTiles = 2;
         complete = false;
         score = 0;
+        speed = 1500;
     }
 
     List<Integer> newGame(Difficulty level) {
         switch (level) {
             case EASY:
                 numTiles = 2;
+                speed = 1700;
                 break;
             case MEDIUM:
                 numTiles = 3;
+                speed = 1500;
                 break;
             case HARD:
                 numTiles = 4;
+                speed = 1200;
                 break;
             case MASTER:
                 numTiles = 5;
+                speed = 1200;
                 break;
         }
         return createSequence(2);
@@ -58,8 +62,6 @@ class MemoryGame {
         if (answers.size() == sequence.size()) {
             complete = true;
         }
-        Log.i("S=", sequence + "-----------------------------------------------------");
-        Log.i("A=", answers + "------------------------------------------------------");
         return true;
     }
 
@@ -73,5 +75,9 @@ class MemoryGame {
 
     int getScore() {
         return score;
+    }
+
+    int getSpeed() {
+        return speed;
     }
 }
