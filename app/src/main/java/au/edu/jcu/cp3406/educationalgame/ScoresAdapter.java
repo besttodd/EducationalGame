@@ -47,10 +47,10 @@ public class ScoresAdapter extends BaseAdapter {
             child = layoutInflater.inflate(R.layout.highscoreslayout, null);
 
             holder = new Holder();
-            holder.textviewid = (TextView) child.findViewById(R.id.textViewID);
-            holder.textviewdate = (TextView) child.findViewById(R.id.textViewDATE);
-            holder.textviewdifficulty = (TextView) child.findViewById(R.id.textViewDIFFICULTY);
-            holder.textviewscore = (TextView) child.findViewById(R.id.textViewSCORE);
+            holder.textviewid = child.findViewById(R.id.textViewID);
+            holder.textviewdate = child.findViewById(R.id.textViewDATE);
+            holder.textviewdifficulty = child.findViewById(R.id.textViewDIFFICULTY);
+            holder.textviewscore = child.findViewById(R.id.textViewSCORE);
             child.setTag(holder);
         } else {
             holder = (Holder) child.getTag();
@@ -59,7 +59,7 @@ public class ScoresAdapter extends BaseAdapter {
         holder.textviewid.setText(entryId.get(position));
         holder.textviewdate.setText(date.get(position));
         holder.textviewdifficulty.setText(difficulty.get(position));
-        holder.textviewscore.setText(score.get(position).toString());
+        holder.textviewscore.setText(String.valueOf(score.get(position)));
 
         return child;
     }

@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     // Context of the app under test.
-    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    private Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     @Test
     public void useAppContext() {
         assertEquals("au.edu.jcu.cp3406.educationalgame", appContext.getPackageName());
@@ -44,7 +44,7 @@ public class ExampleInstrumentedTest {
         ArrayList<String> difficultyList = new ArrayList<String>();
         ArrayList<Integer> scoreList = new ArrayList<Integer>();
 
-        Difficulty level = Difficulty.MASTER;
+        int level = 3;
 
         dbhelper = new DBHelper(appContext);
         db = dbhelper.getWritableDatabase();
@@ -54,7 +54,7 @@ public class ExampleInstrumentedTest {
         while (cursor.moveToNext()) {
             int existingScore = cursor.getInt(1);
             if (newScore > existingScore) {
-                dbhelper.insertScore(db, "08-05-20", level.toString(), newScore);
+                dbhelper.insertScore(db, "08-05-20", level, newScore);
                 Log.i("ExInstTest","New high score added!");
                 break;
             }

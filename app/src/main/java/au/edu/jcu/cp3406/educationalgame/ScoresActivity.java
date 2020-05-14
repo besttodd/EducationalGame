@@ -21,11 +21,9 @@ import java.util.ArrayList;
 
 public class ScoresActivity extends BaseActivity implements StateListener {
     public static int SETTINGS_REQUEST = 222;
-    Fragment settingsFragment;
+    private Fragment settingsFragment;
     private SQLiteDatabase db;
     private Cursor cursor;
-
-    ScoresAdapter scoresAdapter;
 
     ArrayList<String> idList = new ArrayList<>();
     ArrayList<String> dateList = new ArrayList<>();
@@ -44,7 +42,7 @@ public class ScoresActivity extends BaseActivity implements StateListener {
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        showHideFragment(settingsFragment);
+        hideFragment(settingsFragment);
 
         DBHelper dbhelper = new DBHelper(this);
 
@@ -63,8 +61,7 @@ public class ScoresActivity extends BaseActivity implements StateListener {
                 } while (cursor.moveToNext());
             }
 
-            scoresAdapter = new ScoresAdapter(ScoresActivity.this, idList, dateList, difficultyList, scoreList);
-
+            ScoresAdapter scoresAdapter = new ScoresAdapter(ScoresActivity.this, idList, dateList, difficultyList, scoreList);
             listScores.setAdapter(scoresAdapter);
         } catch (SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
@@ -74,7 +71,6 @@ public class ScoresActivity extends BaseActivity implements StateListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the app bar.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -83,8 +79,10 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_settings:
-                //setSettingOptions();
-                showHideFragment(settingsFragment);
+                showFragment(settingsFragment);
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -96,12 +94,6 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         super.onDestroy();
         cursor.close();
         db.close();
-    }
-
-    public void backClicked(View view) {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
     String convert(int level) {
@@ -124,15 +116,15 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         return newLevel;
     }
 
-    public void showHideFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.show(fragment);
+        ft.commit();
+    }
 
-        if (settingsFragment.isHidden()) {
-            ft.show(fragment);
-        } else {
-            ft.hide(fragment);
-        }
-
+    public void hideFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(fragment);
         ft.commit();
     }
 
@@ -140,7 +132,13 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     public void onUpdate(State state, Difficulty level) {
         switch (state) {
             case SETTINGS:
-                showHideFragment(settingsFragment);
+                hideFragment(settingsFragment);
+                break;
+            case SHAKE:
+            case RESTART:
+                Intent intent = new Intent(this, HigherLowerGameActivity.class);
+                intent.putExtra("difficulty", level);
+                startActivity(intent);
                 break;
         }
     }

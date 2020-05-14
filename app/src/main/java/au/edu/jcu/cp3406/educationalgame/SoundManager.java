@@ -76,6 +76,10 @@ public class SoundManager extends Application {
         return musicOn;
     }
 
+    public int isSoundOn() {
+        return soundOn;
+    }
+
     boolean audioReady() {
         return loaded;
     }

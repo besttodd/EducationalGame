@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity implements StateListener {
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        showHideFragment(settingsFragment);
+        hideFragment(settingsFragment);
 
         difficultySpinner = findViewById(R.id.difficultySpinner);
         level = Difficulty.EASY;
@@ -43,8 +43,7 @@ public class MainActivity extends BaseActivity implements StateListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_settings:
-                //setSettingOptions();
-                showHideFragment(settingsFragment);
+                showFragment(settingsFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -54,9 +53,7 @@ public class MainActivity extends BaseActivity implements StateListener {
     @Override
     protected void onPause() {
         super.onPause();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.hide(settingsFragment);
-        ft.commit();
+        hideFragment(settingsFragment);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class MainActivity extends BaseActivity implements StateListener {
         startActivity(intent);
     }
 
-    public void showHideFragment(Fragment fragment) {
+    /*public void showHideFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (settingsFragment.isHidden()) {
@@ -106,6 +103,17 @@ public class MainActivity extends BaseActivity implements StateListener {
             ft.hide(fragment);
         }
 
+        ft.commit();
+    }*/
+    public void showFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.show(fragment);
+        ft.commit();
+    }
+
+    public void hideFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(fragment);
         ft.commit();
     }
 
@@ -118,7 +126,7 @@ public class MainActivity extends BaseActivity implements StateListener {
     public void onUpdate(State state, Difficulty level) {
         switch (state) {
             case SETTINGS:
-                showHideFragment(settingsFragment);
+                hideFragment(settingsFragment);
                 break;
         }
     }

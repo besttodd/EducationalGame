@@ -1,7 +1,7 @@
 package au.edu.jcu.cp3406.educationalgame;
 
 public enum  State {
-    SOUND, MUSIC, SETTINGS,
+    SETTINGS,
     RESTART, CONTINUE, GAME_OVER,
     SHAKE
 }

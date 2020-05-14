@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -17,21 +18,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.InputStream;
 
 public class HigherLowerGameActivity extends BaseActivity implements StateListener {
     static String GAME_TIME = "00:15";
     static int POINTS_CORRECT = 10;
     static int POINTS_INCORRECT = 5;
-    Timer timer;
-    HLGame game = new HLGame();
-    Difficulty level;
-    final Handler handler = new Handler();
-    Runnable runnable;
-    boolean result = false;
-    Fragment settingsFragment;
-    SoundManager soundManager;
+    private Timer timer;
+    private HLGame game = new HLGame();
+    private Difficulty level;
+    private final Handler handler = new Handler();
+    private Runnable runnable;
+    private boolean result = false;
+    private Fragment settingsFragment;
+    private SoundManager soundManager;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
@@ -44,13 +48,6 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*if (soundManager == null) {
-            soundManager = new SoundManager(this);
-            if (soundManager.audioReady()) {
-                soundManager.playMusic();
-            }
-        }*/
-        //soundManager.setSoundManager(this);
         soundManager = ((SoundManager) getApplication());
 
         //ShakeDetector initialization
@@ -70,12 +67,17 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
         level = (Difficulty) getIntent().getSerializableExtra("difficulty");
 
         FragmentManager fm = getSupportFragmentManager();
+        Fragment gameFragment = fm.findFragmentById(R.id.game);
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        showHideFragment(settingsFragment);
+        boolean isLargeScreen = gameFragment != null;
 
         Button equals = findViewById(R.id.equalButton);
         if (level == Difficulty.MASTER) {
             equals.setVisibility(View.VISIBLE);
+        }
+
+        if (!isLargeScreen) {
+            hideFragment(settingsFragment);
         }
 
         timer = new Timer(GAME_TIME);
@@ -85,7 +87,6 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate menu to the app bar.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -94,8 +95,7 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_settings:
-                //setSettingOptions();
-                showHideFragment(settingsFragment);
+                showFragment(settingsFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,9 +128,10 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
         Intent intent;
 
         switch (state) {
-            case SOUND:
-                soundManager.muteUnMuteSound();
+            case SETTINGS:
+                showFragment(settingsFragment);
                 break;
+            case SHAKE:
             case RESTART:
                 intent = getIntent();
                 handler.removeCallbacks(runnable);
@@ -138,24 +139,21 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;
-            case SETTINGS:
-                showHideFragment(settingsFragment);
-                break;
-            case SHAKE:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                break;
             case GAME_OVER:
+                handler.removeCallbacks(runnable);
+                finish();
                 intent = new Intent(this, ResultsActivity.class);
                 intent.putExtra("difficulty", level);
                 intent.putExtra("score", game.getScore());
                 startActivity(intent);
                 break;
         }
+
     }
 
     public void checkSelected(View view) {
         TextView score = findViewById(R.id.scoreDisplay);
+        ImageView mark = findViewById(R.id.markImage);
         int selectedCard = view.getId();
 
         switch (selectedCard) {
@@ -171,17 +169,15 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
         }
         System.out.println(result);
         if (result) {
-            Toast message = Toast.makeText(this, "CORRECT", Toast.LENGTH_SHORT);
-            message.setGravity(Gravity.CENTER, 0, 0);
-            message.show();
+            //Toast.makeText(this, "CORRECT", Toast.LENGTH_SHORT).show();
             soundManager.playSound(1);
+            mark.setImageResource(R.drawable.correct);
             game.setScore(POINTS_CORRECT);
             score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
         } else {
-            Toast notDone = Toast.makeText(this, "WRONG", Toast.LENGTH_SHORT);
-            notDone.setGravity(Gravity.CENTER, 0, 0);
-            notDone.show();
+            //Toast.makeText(this, "WRONG", Toast.LENGTH_SHORT).show();
             soundManager.playSound(0);
+            mark.setImageResource(R.drawable.incorrect);
             game.setScore(POINTS_INCORRECT);
             score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
         }
@@ -219,24 +215,17 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
         }
     }
 
-    public void showHideFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        if (settingsFragment.isHidden()) {
-            ft.show(fragment);
-        } else {
-            ft.hide(fragment);
-        }
-
+        ft.show(fragment);
         ft.commit();
     }
 
-    /*void setSettingOptions() {
-        Bundle settingsOptions = new Bundle();
-        settingsOptions.putBoolean("music", musicOn);
-        //settingsOptions.putSerializable("sound", soundOn);
-        settingsFragment.setArguments(settingsOptions);
-    }*/
+    public void hideFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(fragment);
+        ft.commit();
+    }
 
     void handleShakeEvent() {
         Intent intent = new Intent(this, MainActivity.class);

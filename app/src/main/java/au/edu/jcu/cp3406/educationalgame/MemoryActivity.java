@@ -1,6 +1,5 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,17 +21,17 @@ import java.util.List;
 public class MemoryActivity extends BaseActivity implements StateListener {
     private StateListener listener;
     private Context context;
+    private Difficulty level;
     private Tile[] tiles =
-     {new Tile(R.drawable.square), new Tile(R.drawable.circle), new Tile(R.drawable.square), new Tile(R.drawable.circle), new Tile(R.drawable.square), new Tile(R.drawable.circle)};
+     {new Tile(R.drawable.square), new Tile(R.drawable.circle), new Tile(R.drawable.triangle), new Tile(R.drawable.hexagon), new Tile(R.drawable.plus)};
     //TileManager tileManager;
-    private MemoryGame game = new MemoryGame();
-    final Handler handler = new Handler();
-    Iterator<Integer> iterator;
-    boolean correct;
-    Runnable runnable;
-    TileAdapter tileAdapter;
-    GridView gridView;
-    Fragment settingsFragment;
+    private MemoryGame memoryGame = new MemoryGame();
+    private final Handler handler = new Handler();
+    private Iterator<Integer> iterator;
+    private Runnable runnable;
+    private TileAdapter tileAdapter;
+    private GridView gridView;
+    private Fragment settingsFragment;
 
     List<Integer> sequence;
     List<Integer> answers;
@@ -50,14 +49,14 @@ public class MemoryActivity extends BaseActivity implements StateListener {
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        showHideFragment(settingsFragment);
+        hideFragment(settingsFragment);
 
         gridView = findViewById(R.id.gridView);
         tileAdapter = new TileAdapter(this, tiles);
         gridView.setAdapter(tileAdapter);
 
-        final Difficulty level = (Difficulty) getIntent().getSerializableExtra("difficulty");
-        sequence = game.newGame(level);
+        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        sequence = memoryGame.newGame(level);
         answers = new ArrayList<>();
         playSequence();
 
@@ -70,9 +69,9 @@ public class MemoryActivity extends BaseActivity implements StateListener {
                 answers.add(position);
                 previous[0] = position;
 
-                if (!game.checkOrder(answers)) {
+                if (!memoryGame.checkOrder(answers)) {
                     onUpdate(State.GAME_OVER, level);
-                } else if (game.isSequenceComplete()){
+                } else if (memoryGame.isSequenceComplete()){
                     onUpdate(State.CONTINUE, level);
                 }
 
@@ -85,11 +84,6 @@ public class MemoryActivity extends BaseActivity implements StateListener {
         Intent intent;
 
         switch (state) {
-            case SOUND:
-                //soundManager.muteUnMuteSound();
-                break;
-            case MUSIC:
-                break;
             case RESTART:
                 intent = getIntent();
                 handler.removeCallbacks(runnable);
@@ -98,16 +92,21 @@ public class MemoryActivity extends BaseActivity implements StateListener {
                 startActivity(intent);
                 break;
             case CONTINUE:
-                game.createSequence(answers.size() + 1);
+                Toast.makeText(getBaseContext(), "YOU GOT IT\nKeep Going!", Toast.LENGTH_SHORT).show();
+                //update score
+                sequence = memoryGame.createSequence(answers.size());
+                answers = new ArrayList<>();
                 playSequence();
                 break;
             case GAME_OVER:
                 intent = new Intent(this, ResultsActivity.class);
-                intent.putExtra("score", game.getScore());
+                intent.putExtra("score", memoryGame.getScore());
+                intent.putExtra("difficulty", level);
+                intent.putExtra("game", Game.MEMORY);
                 startActivity(intent);
                 break;
             case SETTINGS:
-                showHideFragment(settingsFragment);
+                hideFragment(settingsFragment);
                 break;
         }
     }
@@ -131,23 +130,28 @@ public class MemoryActivity extends BaseActivity implements StateListener {
                 }
             }
         });
-        Log.i("playSequence", String.valueOf(sequence));
+        Log.i("Sequence", String.valueOf(sequence));
     }
 
     public void settingsClicked(View view) {
-        showHideFragment(settingsFragment);
+        showFragment(settingsFragment);
     }
 
-    public void showHideFragment(Fragment fragment){
+    public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        if (settingsFragment.isHidden()) {
-            ft.show(fragment);
-            Log.d("hidden","Show");
-        } else {
-            ft.hide(fragment);
-            Log.d("Shown","Hide");
-        }
+        ft.show(fragment);
         ft.commit();
+    }
+
+    public void hideFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(fragment);
+        ft.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 }

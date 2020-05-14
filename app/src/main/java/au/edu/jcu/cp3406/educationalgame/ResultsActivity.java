@@ -22,15 +22,15 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ResultsActivity extends BaseActivity implements StateListener {
+    private static final int MAX_SCORES = 10;
     private SQLiteDatabase db;
     private Cursor cursor;
-    Difficulty level;
-    Fragment settingsFragment;
-    private static final int MAX_SCORES = 10;
-    TextView highScore;
-    ImageView tweetImage;
-    String highScoreTweet;
-    SoundManager soundManager;
+    private Difficulty level;
+    private Game game;
+    private Fragment settingsFragment;
+    private TextView highScore;
+    private ImageView tweetImage;
+    private String highScoreTweet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +41,31 @@ public class ResultsActivity extends BaseActivity implements StateListener {
 
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        showHideFragment(settingsFragment);
+        hideFragment(settingsFragment);
 
         TextView scoreDisplay = findViewById(R.id.finalScore);
         highScore = findViewById(R.id.highScoreNotification);
         tweetImage = findViewById(R.id.tweetImage);
         level = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        game = (Game) getIntent().getSerializableExtra("game");
+        assert level != null;
         int convertedLevel = convert(level);
         int newScore = Objects.requireNonNull(getIntent().getExtras()).getInt("score");
-        scoreDisplay.setText(Integer.toString(newScore));
+        scoreDisplay.setText(String.valueOf(newScore));
         highScoreTweet = "My new High Score on Maths Master is " + newScore;
-        soundManager = ((SoundManager) getApplication());
 
         DBHelper dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
         cursor = db.query("HIGHSCORES", new String[]{"_id", "DIFFICULTY", "SCORE"},
                 null, null, null, null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
 
-        //FIX HERE - Always writes to DB-------------------------------------------------
         if (cursor.getCount() < MAX_SCORES) {
             saveScore(dbhelper, newScore, convertedLevel);
         } else {
             for (int i = 0; i < 10; i++) {
                 cursor.moveToNext();
                 int existingScore = cursor.getInt(2);
-                int existigLevel = cursor.getInt(1);
+                //int existigLevel = cursor.getInt(1);
                 if (newScore > existingScore) {
                     saveScore(dbhelper, newScore, convertedLevel);
                     break;
@@ -76,7 +76,6 @@ public class ResultsActivity extends BaseActivity implements StateListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu on the app bar.
         getMenuInflater().inflate(R.menu.menu_twitter, menu);
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return super.onCreateOptionsMenu(menu);
@@ -91,12 +90,17 @@ public class ResultsActivity extends BaseActivity implements StateListener {
                 startActivity(intent);
                 return true;
             case R.id.action_open_settings:
-                //setSettingOptions();
-                showHideFragment(settingsFragment);
+                showFragment(settingsFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideFragment(settingsFragment);
     }
 
     @Override
@@ -147,15 +151,15 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         startActivity(intent);
     }
 
-    public void showHideFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.show(fragment);
+        ft.commit();
+    }
 
-        if (settingsFragment.isHidden()) {
-            ft.show(fragment);
-        } else {
-            ft.hide(fragment);
-        }
-
+    public void hideFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(fragment);
         ft.commit();
     }
 
@@ -163,7 +167,13 @@ public class ResultsActivity extends BaseActivity implements StateListener {
     public void onUpdate(State state, Difficulty level) {
         switch (state) {
             case SETTINGS:
-                showHideFragment(settingsFragment);
+                showFragment(settingsFragment);
+                break;
+            case SHAKE:
+            case RESTART:
+                Intent intent = new Intent(this, HigherLowerGameActivity.class);
+                intent.putExtra("difficulty", level);
+                startActivity(intent);
                 break;
         }
     }

@@ -1,5 +1,7 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,7 +11,6 @@ class MemoryGame {
     private Random r;
     private int numTiles;
     private boolean complete;
-    private boolean gameOver;
     private int score;
 
     MemoryGame() {
@@ -17,7 +18,6 @@ class MemoryGame {
         r = new Random();
         numTiles = 2;
         complete = false;
-        gameOver = false;
         score = 0;
     }
 
@@ -33,37 +33,34 @@ class MemoryGame {
                 numTiles = 4;
                 break;
             case MASTER:
-                numTiles = 6;
+                numTiles = 5;
                 break;
         }
-        createSequence(2);
-        return sequence;
+        return createSequence(2);
     }
 
-    public void createSequence(int numSteps) {
+    List<Integer> createSequence(int numSteps) {
+        complete = false;
+        sequence = new ArrayList<>();
         sequence.add(r.nextInt(numTiles));
         for (int i = 0; i < numSteps; i++) {
             sequence.add(r.nextInt(numTiles));
         }
+        return sequence;
     }
 
     boolean checkOrder(List<Integer> answers) {
         for (int i = 0; i < answers.size(); i++) {
             if (!answers.get(i).equals(sequence.get(i))) {
-                gameOver = true;
                 return false;
             }
         }
         if (answers.size() == sequence.size()) {
             complete = true;
         }
-        System.out.println("S=" + sequence + "-----------------------------------------------------");
-        System.out.println("A=" + answers + "------------------------------------------------------");
+        Log.i("S=", sequence + "-----------------------------------------------------");
+        Log.i("A=", answers + "------------------------------------------------------");
         return true;
-    }
-
-    boolean isGameOver() {
-        return gameOver;
     }
 
     boolean isSequenceComplete() {
