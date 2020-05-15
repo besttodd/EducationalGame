@@ -20,9 +20,9 @@
         <activity android:name=".Authenticate_Activity" />
         <activity android:name=".Twitter_Activity" />
         <activity android:name=".ScoresActivity" />
-        <activity android:name=".MemoryActivity" />
+        <activity android:name=".MemoryGameActivity" />
         <activity android:name=".ResultsActivity" />
-        <activity android:name=".HigherLowerGameActivity" />
+        <activity android:name=".MathsGameActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

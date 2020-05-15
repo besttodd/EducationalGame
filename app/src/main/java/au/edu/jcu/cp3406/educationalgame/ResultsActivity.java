@@ -143,8 +143,8 @@ public class ResultsActivity extends BaseActivity implements StateListener {
 
     public void restart(View view) {
         Intent intent;
-        if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
-        else { intent = new Intent(this, MemoryActivity.class); }
+        if (game.equals(Game.MATHS)) { intent = new Intent(this, MathsGameActivity.class); }
+        else { intent = new Intent(this, MemoryGameActivity.class); }
         intent.putExtra("difficulty", level);
         startActivity(intent);
     }
@@ -175,8 +175,8 @@ public class ResultsActivity extends BaseActivity implements StateListener {
             case SHAKE:
             case RESTART:
                 Intent intent;
-                if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
-                else { intent = new Intent(this, MemoryActivity.class); }
+                if (game.equals(Game.MATHS)) { intent = new Intent(this, MathsGameActivity.class); }
+                else { intent = new Intent(this, MemoryGameActivity.class); }
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MemoryActivity extends BaseActivity implements StateListener {
+public class MemoryGameActivity extends BaseActivity implements StateListener {
     static int POINTS_CORRECT = 10;
     private StateListener listener;
     private Context context;
@@ -47,7 +47,7 @@ public class MemoryActivity extends BaseActivity implements StateListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_memory);
+        setContentView(R.layout.activity_memory_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,8 +60,12 @@ public class MemoryActivity extends BaseActivity implements StateListener {
         soundManager = ((SoundManager) getApplication());
 
         FragmentManager fm = getSupportFragmentManager();
+        Fragment gameFragment = fm.findFragmentById(R.id.memoryGameFragment);
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        hideFragment(settingsFragment);
+        boolean isLargeScreen = gameFragment != null;
+        if (!isLargeScreen) {
+            hideFragment(settingsFragment);
+        }
 
         gridView = findViewById(R.id.gridView);
         tileAdapter = new TileAdapter(this, tiles);

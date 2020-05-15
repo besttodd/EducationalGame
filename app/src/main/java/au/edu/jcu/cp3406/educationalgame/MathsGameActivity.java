@@ -7,29 +7,24 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.InputStream;
-
-public class HigherLowerGameActivity extends BaseActivity implements StateListener {
+public class MathsGameActivity extends BaseActivity implements StateListener {
     static String GAME_TIME = "00:15";
     static int POINTS_CORRECT = 10;
     static int POINTS_INCORRECT = 5;
     private Timer timer;
-    private HLGame game = new HLGame();
+    private MathsGame game = new MathsGame();
     private Difficulty level;
     private final Handler handler = new Handler();
     private Runnable runnable;
@@ -44,7 +39,7 @@ public class HigherLowerGameActivity extends BaseActivity implements StateListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_higher_lower_game);
+        setContentView(R.layout.activity_maths_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

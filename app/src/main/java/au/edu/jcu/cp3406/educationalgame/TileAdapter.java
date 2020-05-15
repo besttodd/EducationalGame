@@ -35,8 +35,8 @@ public class TileAdapter extends BaseAdapter {
         final Tile tile = tiles[position];
 
         if (convertView == null) {
-            final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-            convertView = layoutInflater.inflate(R.layout.tile, null);
+            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+            convertView = layoutInflater.inflate(R.layout.tile, parent, false);
         }
 
         ImageView imageView = convertView.findViewById(R.id.tileView);

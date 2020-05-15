@@ -11,10 +11,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -144,8 +142,8 @@ public class ScoresActivity extends BaseActivity implements StateListener {
             case SHAKE:
             case RESTART:
                 Intent intent;
-                if (game.equals(Game.MATHS)) { intent = new Intent(this, HigherLowerGameActivity.class); }
-                else { intent = new Intent(this, MemoryActivity.class); }
+                if (game.equals(Game.MATHS)) { intent = new Intent(this, MathsGameActivity.class); }
+                else { intent = new Intent(this, MemoryGameActivity.class); }
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;

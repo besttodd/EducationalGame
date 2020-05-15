@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements StateListener {
         String selection = difficultySpinner.getSelectedItem().toString();
         level = Difficulty.valueOf(selection.toUpperCase());
 
-        Intent intent = new Intent(this, HigherLowerGameActivity.class);
+        Intent intent = new Intent(this, MathsGameActivity.class);
         intent.putExtra("difficulty", level);
         startActivity(intent);
     }
@@ -89,22 +89,11 @@ public class MainActivity extends BaseActivity implements StateListener {
         String selection = difficultySpinner.getSelectedItem().toString();
         level = Difficulty.valueOf(selection.toUpperCase());
 
-        Intent intent = new Intent(this, MemoryActivity.class);
+        Intent intent = new Intent(this, MemoryGameActivity.class);
         intent.putExtra("difficulty", level);
         startActivity(intent);
     }
 
-    /*public void showHideFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        if (settingsFragment.isHidden()) {
-            ft.show(fragment);
-        } else {
-            ft.hide(fragment);
-        }
-
-        ft.commit();
-    }*/
     public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.show(fragment);
