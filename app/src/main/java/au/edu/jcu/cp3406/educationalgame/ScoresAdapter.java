@@ -46,7 +46,8 @@ public class ScoresAdapter extends BaseAdapter {
 
         if (child == null) {
             layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            child = layoutInflater.inflate(R.layout.highscoreslayout, null);
+            assert layoutInflater != null;
+            child = layoutInflater.inflate(R.layout.highscoreslayout, parent, false);
 
             holder = new Holder();
             holder.textviewid = child.findViewById(R.id.textViewID);

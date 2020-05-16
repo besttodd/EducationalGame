@@ -19,19 +19,19 @@ public class SoundManager extends Application {
         musicOn = true;
         streamId = -1;
 
-            soundPool = new SoundPool(5, android.media.AudioManager.STREAM_MUSIC, 0);
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    loaded = status == 0;
-                    if (loaded) {
-                        Log.i("SoundManager", "loaded sound: " + sampleId);
-                        if (sampleId == 3) {
-                            playMusic();
-                        }
+        soundPool = new SoundPool(5, android.media.AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loaded = status == 0;
+                if (loaded) {
+                    Log.i("SoundManager", "loaded sound: " + sampleId);
+                    if (sampleId == 3) {
+                        playMusic();
                     }
                 }
-            });
+            }
+        });
     }
 
     @Override
@@ -47,30 +47,46 @@ public class SoundManager extends Application {
         sounds[0] = soundPool.load(context, R.raw.incorrect, 0);
     }
 
-    void playSound(int soundNum) {
+    public void playSound(int soundNum) {
         soundPool.play(sounds[soundNum], soundOn, soundOn, 1, 0, 1);
     }
 
-    void playMusic() {
-        streamId = soundPool.play(sounds[2], 1, 1, 1, 6, 1);
+    public void playMusic() {
+        streamId = soundPool.play(sounds[2], 1, 1, 1, 10, 1);
     }
 
-    void muteUnMuteSound() {
-        if (soundOn == 1) {
-            soundOn = 0;
-        } else {
-            soundOn = 1;
-        }
-    }
-
-    public void muteUnMuteMusic() {
+    public void toggleMusic() {
         if (musicOn) {
-            soundPool.pause(streamId);
-            musicOn = false;
+            muteMusic();
         } else {
-            soundPool.resume(streamId);
-            musicOn = true;
+            unMuteMusic();
         }
+    }
+
+    public void toggleSound() {
+        if (soundOn == 1) {
+            muteSound();
+        } else {
+            unMuteSound();
+        }
+    }
+
+    void muteSound() {
+        soundOn = 0;
+    }
+
+    void unMuteSound() {
+        soundOn = 1;
+    }
+
+    void muteMusic() {
+        soundPool.pause(streamId);
+        musicOn = false;
+    }
+
+    void unMuteMusic() {
+        soundPool.resume(streamId);
+        musicOn = true;
     }
 
     public boolean isMusicOn() {
@@ -81,13 +97,12 @@ public class SoundManager extends Application {
         return soundOn;
     }
 
-    boolean audioReady() {
+    /*boolean audioReady() {
         return loaded;
-    }
+    }*/
 
     void closeAudio() {
         sounds = null;
-        soundPool.stop(streamId);
         soundPool.release();
         soundPool = null;
     }

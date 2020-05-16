@@ -41,13 +41,11 @@ public class MainActivity extends BaseActivity implements StateListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_open_settings:
-                showFragment(settingsFragment);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_open_settings) {
+            showFragment(settingsFragment);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -61,19 +59,9 @@ public class MainActivity extends BaseActivity implements StateListener {
         super.onResume();
         //if (allowRefresh)
         //{
-            //allowRefresh = false;
-            getSupportFragmentManager().beginTransaction().replace(R.id.settingsFragment, settingsFragment).commit();
+        //allowRefresh = false;
+        getSupportFragmentManager().beginTransaction().replace(R.id.settingsFragment, settingsFragment).commit();
         //}
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     public void startHLGame(View view) {
@@ -85,6 +73,15 @@ public class MainActivity extends BaseActivity implements StateListener {
         startActivity(intent);
     }
 
+    @Override
+    public void onUpdate(State state, Difficulty level) {
+        switch (state) {
+            case SETTINGS:
+                hideFragment(settingsFragment);
+                break;
+        }
+    }
+
     public void startMemoryGame(View view) {
         String selection = difficultySpinner.getSelectedItem().toString();
         level = Difficulty.valueOf(selection.toUpperCase());
@@ -92,6 +89,11 @@ public class MainActivity extends BaseActivity implements StateListener {
         Intent intent = new Intent(this, MemoryGameActivity.class);
         intent.putExtra("difficulty", level);
         startActivity(intent);
+    }
+
+    public void highScoresClicked(View view) {
+        Intent intent = new Intent(this, ScoresActivity.class);
+        startActivityForResult(intent, ScoresActivity.SETTINGS_REQUEST);
     }
 
     public void showFragment(Fragment fragment) {
@@ -104,19 +106,5 @@ public class MainActivity extends BaseActivity implements StateListener {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.hide(fragment);
         ft.commit();
-    }
-
-    public void highScoresClicked(View view) {
-        Intent intent = new Intent(this, ScoresActivity.class);
-        startActivityForResult(intent, ScoresActivity.SETTINGS_REQUEST);
-    }
-
-    @Override
-    public void onUpdate(State state, Difficulty level) {
-        switch (state) {
-            case SETTINGS:
-                hideFragment(settingsFragment);
-                break;
-        }
     }
 }

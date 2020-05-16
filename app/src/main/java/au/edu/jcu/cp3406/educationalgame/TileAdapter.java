@@ -8,11 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public class TileAdapter extends BaseAdapter {
-    private final Context mContext;
+    private final Context context;
     private final Tile[] tiles;
 
     TileAdapter(Context context, Tile[] tiles) {
-        this.mContext = context;
+        this.context = context;
         this.tiles = tiles;
     }
 
@@ -35,12 +35,12 @@ public class TileAdapter extends BaseAdapter {
         final Tile tile = tiles[position];
 
         if (convertView == null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+            LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.tile, parent, false);
         }
 
         ImageView imageView = convertView.findViewById(R.id.tileView);
-        imageView.setImageResource(tile.getImg());
+        imageView.setImageBitmap(tile.getActive());
 
         return convertView;
     }

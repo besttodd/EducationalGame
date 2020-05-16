@@ -15,8 +15,8 @@ import android.widget.Switch;
 import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
-    private StateListener listener;
     private Difficulty level;
+    private StateListener listener;
     private SoundManager soundManager;
 
     public SettingsFragment() {
@@ -27,7 +27,6 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
         listener = (StateListener) context;
         level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
         if (level == null) {
@@ -52,14 +51,14 @@ public class SettingsFragment extends Fragment {
         sound.setOnClickListener(new Switch.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundManager.muteUnMuteSound();
+                soundManager.toggleSound();
             }
         });
 
         music.setOnClickListener(new Switch.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundManager.muteUnMuteMusic();
+                soundManager.toggleMusic();
             }
         });
 

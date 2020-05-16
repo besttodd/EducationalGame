@@ -76,7 +76,14 @@ public class ScoresFragment extends Fragment {
         return view;
     }
 
-    String convert(int level) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        db.close();
+    }
+
+    private String convert(int level) {
         String newLevel = "";
 
         switch (level) {
@@ -94,12 +101,5 @@ public class ScoresFragment extends Fragment {
                 break;
         }
         return newLevel;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        cursor.close();
-        db.close();
     }
 }

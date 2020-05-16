@@ -11,11 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class MathsGameFragment extends Fragment {
-    private StateListener listener;
-    private Context context;
-    private MathsGameFragment gameFragment;
-    private StatusFragment statusFragment;
-    private SettingsFragment settingsFragment;
 
     public MathsGameFragment() {
         // Required empty public constructor
@@ -24,8 +19,6 @@ public class MathsGameFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        listener = (StateListener) context;
-        this.context = context;
     }
 
     @Override

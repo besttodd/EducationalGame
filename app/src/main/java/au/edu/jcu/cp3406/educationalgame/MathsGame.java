@@ -81,6 +81,28 @@ class MathsGame {
         }
     }
 
+    boolean checkCards(int selected, String task) {
+        switch (task) {
+            case "Higher":
+                if (selected == 3) {
+                    if (c1Answer == c2Answer) {
+                        return true;
+                    }
+                } else if (selected == 2) {
+                    return c2Answer > c1Answer;
+                } else return c1Answer > c2Answer;
+            case "Lower":
+                if (selected == 3) {
+                    if (c1Answer == c2Answer) {
+                        return true;
+                    }
+                } else if (selected == 2) {
+                    return c2Answer < c1Answer;
+                } else return c1Answer < c2Answer;
+        }
+        return false;
+    }
+
     void setScore(int points) {
         score = score + points;
     }
@@ -95,21 +117,5 @@ class MathsGame {
 
     String getCard2() {
         return card2;
-    }
-
-    boolean checkCards(int selected, String task) {
-        switch (task) {
-            case "Higher":
-                if (selected == 3) {
-                    if (c1Answer == c2Answer) {
-                        return true;
-                    }
-                } else if (selected == 2) {
-                    return c2Answer > c1Answer;
-                } else return c1Answer > c2Answer;
-            case "Lower":
-                return false;
-        }
-        return false;
     }
 }

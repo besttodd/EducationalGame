@@ -25,19 +25,19 @@ class MemoryGame {
         switch (level) {
             case EASY:
                 numTiles = 2;
-                speed = 1700;
+                speed = 2300;
                 break;
             case MEDIUM:
                 numTiles = 3;
-                speed = 1500;
+                speed = 2000;
                 break;
             case HARD:
                 numTiles = 4;
-                speed = 1200;
+                speed = 1700;
                 break;
             case MASTER:
                 numTiles = 5;
-                speed = 1200;
+                speed = 1700;
                 break;
         }
         return createSequence(2);
@@ -79,5 +79,9 @@ class MemoryGame {
 
     int getSpeed() {
         return speed;
+    }
+
+    int getNumTiles() {
+        return numTiles;
     }
 }

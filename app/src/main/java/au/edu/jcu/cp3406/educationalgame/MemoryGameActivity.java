@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,25 +26,27 @@ import java.util.List;
 
 public class MemoryGameActivity extends BaseActivity implements StateListener {
     static int POINTS_CORRECT = 10;
-    private StateListener listener;
-    private Context context;
     private Difficulty level;
     private SoundManager soundManager;
-    private Tile[] tiles =
-     {new Tile(R.drawable.square), new Tile(R.drawable.circle), new Tile(R.drawable.triangle), new Tile(R.drawable.hexagon), new Tile(R.drawable.plus)};
-    //TileManager tileManager;
-    private MemoryGame memoryGame = new MemoryGame();
-    private final Handler handler = new Handler();
-    private Iterator<Integer> iterator;
-    private Runnable runnable;
+
+    private Tile[] tiles;
     private TileAdapter tileAdapter;
     private GridView gridView;
     private Fragment settingsFragment;
+
+    private MemoryGame memoryGame = new MemoryGame();
+    private List<Integer> sequence;
+    private List<Integer> answers;
+    private Integer[] previous = {0};
+    private Iterator<Integer> iterator;
     private int rounds;
 
-    List<Integer> sequence;
-    List<Integer> answers;
-    Integer[] previous = {0};
+    private final Handler handler = new Handler();
+    private Runnable runnable;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +54,6 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
         setContentView(R.layout.activity_memory_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //tileManager = new TileManager(this.getAssets(), "Shapes");
-        //tiles = tileManager.getTiles();
-        TextView roundsDisplay = findViewById(R.id.timeDisplay);
-
-        listener = (StateListener) context;
-
-        soundManager = ((SoundManager) getApplication());
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment gameFragment = fm.findFragmentById(R.id.memoryGameFragment);
@@ -67,16 +63,33 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             hideFragment(settingsFragment);
         }
 
+        //ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager != null) {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Log.i("Sensor detection", "No accelerometer found on device");
+        }
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake() {
+                handleShakeEvent();
+            }
+        });
+
+        soundManager = (SoundManager) getApplication();
+        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        rounds = 0;
+        TextView roundsDisplay = findViewById(R.id.timeDisplay);
+        roundsDisplay.setText(String.format("Rounds: %s", rounds));
+        TileManager tileManager = new TileManager(this.getAssets(), "Shapes");
+        sequence = memoryGame.newGame(level);
+        tiles = tileManager.getTiles(memoryGame.getNumTiles());
         gridView = findViewById(R.id.gridView);
         tileAdapter = new TileAdapter(this, tiles);
         gridView.setAdapter(tileAdapter);
-
-        roundsDisplay.setText(String.format("Rounds: %s", rounds));
-
-        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
-        sequence = memoryGame.newGame(level);
         answers = new ArrayList<>();
-        rounds = 0;
+
         playSequence();
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,6 +97,7 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tile tile = tiles[position];
                 tiles[previous[0]].lightOff();
+
                 tile.lightUp();
                 soundManager.playSound(3);
                 answers.add(position);
@@ -91,10 +105,9 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
 
                 if (!memoryGame.checkOrder(answers)) {
                     onUpdate(State.GAME_OVER, level);
-                } else if (memoryGame.isSequenceComplete()){
+                } else if (memoryGame.isSequenceComplete()) {
                     onUpdate(State.CONTINUE, level);
                 }
-
                 tileAdapter.notifyDataSetChanged();
             }
         });
@@ -108,21 +121,36 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_open_settings:
-                showFragment(settingsFragment);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_open_settings) {
+            showFragment(settingsFragment);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(mShakeDetector);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
     public void onUpdate(State state, Difficulty level) {
         TextView score = findViewById(R.id.scoreDisplay);
         TextView roundsDisplay = findViewById(R.id.timeDisplay);
         Intent intent;
 
         switch (state) {
+            case SETTINGS:
+                hideFragment(settingsFragment);
+                break;
+            case SHAKE:
             case RESTART:
                 intent = getIntent();
                 handler.removeCallbacks(runnable);
@@ -147,10 +175,13 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
                 intent.putExtra("game", Game.MEMORY);
                 startActivity(intent);
                 break;
-            case SETTINGS:
-                hideFragment(settingsFragment);
-                break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 
     public void playSequence() {
@@ -162,9 +193,15 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
                 if (iterator.hasNext()) {
                     tiles[previous[0]].lightOff();
                     previous[0] = iterator.next();
-                    tiles[previous[0]].lightUp();
-                    soundManager.playSound(3);
                     gridView.setAdapter(tileAdapter);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tiles[previous[0]].lightUp();
+                            soundManager.playSound(3);
+                            gridView.setAdapter(tileAdapter);
+                        }
+                    }, 1000);
                     handler.postDelayed(this, memoryGame.getSpeed());
                 } else {
                     tiles[previous[0]].lightOff();
@@ -188,9 +225,8 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
         ft.commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacks(runnable);
+    void handleShakeEvent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

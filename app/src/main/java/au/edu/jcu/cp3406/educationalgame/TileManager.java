@@ -3,18 +3,16 @@ package au.edu.jcu.cp3406.educationalgame;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-public class TileManager {
-    private String[] shapes;
-    private Tile[] tiles;
-    private Tile[] lightedTiles;
+class TileManager {
     private AssetManager assetManager;
+    private String[] shapes;
 
     TileManager(AssetManager assetManager, String assetPath) {
         this.assetManager = assetManager;
@@ -23,46 +21,29 @@ public class TileManager {
         } catch (IOException e) {
             Log.i("TileManger", "Failed to get image names");
         }
-        tiles = new Tile[shapes.length/2];
-        tiles = new Tile[shapes.length/2];
     }
 
-    Tile[] getTiles() {
+    private Bitmap getTileImage(int i) {
         InputStream stream = null;
-
-        for (int i = 0; i < shapes.length; i=i+2) {
-
-            try {
-                stream = assetManager.open("Shapes/" + shapes[i]);
-            } catch (IOException e) {
-                Log.i("TileManager", "Failed to open Shapes/");
-            }
-            //tiles[i] = new Tile(BitmapFactory.decodeStream(stream));
+        try {
+            stream = assetManager.open("Shapes/" + shapes[i]);
+        } catch (IOException e) {
+            Log.i("TileManager", "Failed to open Shapes/" + shapes[i]);
         }
+        return BitmapFactory.decodeStream(stream);
+    }
+
+    Tile[] getTiles(int numTiles) {
+        Tile[] tiles = new Tile[numTiles];
+        List<Tile> list = new ArrayList<>();
+        Bitmap[] selected = new Bitmap[2];
+
+        for (int i = 0; i < numTiles * 2; i += 2) {
+            selected[0] = getTileImage(i);
+            selected[1] = getTileImage(i + 1);
+            list.add(new Tile(selected));
+        }
+        list.toArray(tiles);
         return tiles;
-    }
-
-    Tile[] getLightedTiles() {
-        InputStream stream = null;
-
-        for (int i = 1; i < shapes.length; i=i+2) {
-
-            try {
-                stream = assetManager.open("Shapes/" + shapes[i]);
-            } catch (IOException e) {
-                Log.i("TileManager", "Failed to open Shapes/");
-            }
-            //lightedTiles[i] = new Tile(BitmapFactory.decodeStream(stream));
-        }
-        return lightedTiles;
-    }
-
-    public String getName(int i) {
-        int dotIndex = shapes[i].lastIndexOf(".");
-        return shapes[i].substring(0, dotIndex);
-    }
-
-    public int count() {
-        return shapes.length;
     }
 }

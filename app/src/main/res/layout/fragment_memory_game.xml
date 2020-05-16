@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="end"
+    android:layout_gravity="end"
     android:orientation="vertical"
     tools:context=".MemoryGameFragment">
 
@@ -19,7 +20,6 @@
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
         android:gravity="end"
         android:layout_margin="16dp"
         android:columnWidth="100dp"

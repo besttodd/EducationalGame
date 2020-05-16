@@ -1,18 +1,16 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import android.graphics.Bitmap;
+
 class Tile {
-    private int image;
-    private int lightedImage;
-    private int activeTile;
+    private Bitmap shape;
+    private Bitmap lightedImage;
+    private Bitmap activeTile;
 
-    Tile(int imageResource) {
-        image = imageResource;
-        lightedImage = imageResource + 1;
-        activeTile = imageResource;
-    }
-
-    int getImg() {
-        return activeTile;
+    Tile(Bitmap[] files) {
+        shape = files[0];
+        lightedImage = files[1];
+        activeTile = shape;
     }
 
     void lightUp() {
@@ -20,6 +18,10 @@ class Tile {
     }
 
     void lightOff() {
-        activeTile = image;
+        activeTile = shape;
+    }
+
+    Bitmap getActive() {
+        return activeTile;
     }
 }

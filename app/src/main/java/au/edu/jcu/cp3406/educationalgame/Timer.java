@@ -5,10 +5,9 @@ public class Timer {
     private long seconds;
     private long minutes;
 
-    Timer(String current) {
+    Timer(String time) {
         isRunning = false;
-        seconds = Integer.parseInt(current.substring(current.length() - 2));
-        minutes = Integer.parseInt(current.substring(1, 2));
+        setTime(time);
     }
 
     void tick() {
@@ -32,6 +31,11 @@ public class Timer {
 
     boolean isRunning() {
         return isRunning;
+    }
+
+    private void setTime(String current) {
+        seconds = Integer.parseInt(current.substring(current.length() - 2));
+        minutes = Integer.parseInt(current.substring(1, 2));
     }
 
     public String toString() {

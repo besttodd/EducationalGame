@@ -35,7 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:columnWidth="100dp"
-            android:gravity="center"
             android:numColumns="auto_fit" />
 
     </LinearLayout>

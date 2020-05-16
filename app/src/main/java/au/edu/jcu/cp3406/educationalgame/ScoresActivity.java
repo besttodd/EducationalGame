@@ -34,12 +34,10 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);*/
 
-        //Attach the SectionsPagerAdapter to the ViewPager
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
 
-        //Attach the ViewPager to the TabLayout
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
     }
@@ -54,8 +52,11 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     public void onUpdate(State state, Difficulty level) {
         //SHAKE is only state event on this activity
         Intent intent;
-        if (game.equals(Game.MATHS)) { intent = new Intent(this, MathsGameActivity.class); }
-        else { intent = new Intent(this, MemoryGameActivity.class); }
+        if (game.equals(Game.MATHS)) {
+            intent = new Intent(this, MathsGameActivity.class);
+        } else {
+            intent = new Intent(this, MemoryGameActivity.class);
+        }
         intent.putExtra("difficulty", level);
         startActivity(intent);
     }
@@ -65,16 +66,19 @@ public class ScoresActivity extends BaseActivity implements StateListener {
             super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
-        @Override public int getCount() {
+        @Override
+        public int getCount() {
             return 2;
         }
 
         @NonNull
-        @Override public Fragment getItem(int position) {
+        @Override
+        public Fragment getItem(int position) {
             return new ScoresFragment(Objects.requireNonNull(getPageTitle(position)));
         }
 
-        @Override public CharSequence getPageTitle(int position) {
+        @Override
+        public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
                     return "Maths Master";
