@@ -124,7 +124,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
 
         switch (state) {
             case SETTINGS:
-                showFragment(settingsFragment);
+                hideFragment(settingsFragment);
                 break;
             case SHAKE:
             case RESTART:

@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ResultsActivity extends BaseActivity implements StateListener {
-    private static final int MAX_SCORES = 10;
+    private static final int MAX_SCORES = 7;
     private SQLiteDatabase db;
     private Cursor cursor;
     private Difficulty level;
@@ -56,18 +56,18 @@ public class ResultsActivity extends BaseActivity implements StateListener {
 
         DBHelper dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
+        dbhelper.insertScore(db, "03-05-20", 1, 50, "MATHS");
         cursor = db.query("HIGHSCORES", new String[]{"_id", "DIFFICULTY", "SCORE", "GAME"},
-                null, null, "GAME", null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
+                "GAME = ?", new String[]{game.toString()}, null, null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
 
         if (cursor.getCount() < MAX_SCORES) {
             saveScore(dbhelper, newScore, convertedLevel, game.toString());
         } else {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < MAX_SCORES; i++) {
                 cursor.moveToNext();
                 int existingScore = cursor.getInt(2);
-                String exitingGame = cursor.getString(3);
                 //int existigLevel = cursor.getInt(1);
-                if (newScore > existingScore && !exitingGame.equals(game.toString())) {
+                if (newScore > existingScore) {
                     saveScore(dbhelper, newScore, convertedLevel, game.toString());
                     break;
                 }

@@ -56,7 +56,8 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 3) {
             db.execSQL("ALTER TABLE HIGHSCORES ADD COLUMN GAME TEXT");
-            insertScore(db, "03-05-20", 1, 50, "Memory");
+            //insertScore(db, "03-05-20", 1, 50, "MEMORY");
+            //insertScore(db, "03-05-20", 1, 50, "MATHS");
         }
     }
 }
