@@ -6,14 +6,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:spinnerItemStyle">@style/settingsTheme</item>
-        <item name="spinnerDropDownItemStyle">@style/settingsTheme</item>
+        <item name="android:spinnerItemStyle">@style/spinnerTheme</item>
+        <item name="spinnerDropDownItemStyle">@style/spinnerTheme</item>
+    </style>
+
+    <style name="spinnerTheme">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="settingsTheme">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20dp</item>
-        <item name="android:background">@color/darkBlue</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
     <style name="equationCard" parent="Widget.AppCompat.Button">
@@ -30,6 +35,11 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_margin">16dp</item>
         <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="buttons" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
 </resources>

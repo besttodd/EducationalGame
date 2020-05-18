@@ -27,22 +27,6 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
-    public void getTiles() {
-        int NUM_TILES = 3;
-        String[] shapes = {"square", "squareLitUp", "triangle", "triangleLitUp", "circle", "circleLitUp"};
-
-        Tile[] tiles = new Tile[NUM_TILES];
-        List<Tile> list = new ArrayList<>();
-        String[] selected = new String[2];
-
-        for (int i = 0; i < NUM_TILES * 2; i += 2) {
-            selected[0] = shapes[i];
-            selected[1] = shapes[i + 1];
-            list.add(new Tile(selected));
-        }
-        list.toArray(tiles);
-    }
-
     public void checkHigher() {
         String task = "Higher";
         int selected = 2;  //3=EQUALS Button, 2=Card 2, 1=Card 1

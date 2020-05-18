@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -18,10 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
+            android:layout_margin="32dp"
             android:padding="16dp"
             android:text="@string/title"
-            android:textSize="24sp" />
+            android:textSize="26sp"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,6 +31,7 @@
             android:orientation="horizontal">
 
             <Button
+                style="@style/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,22 +42,33 @@
                 tools:ignore="ButtonStyle" />
 
             <Button
+                style="@style/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
                 android:onClick="startMemoryGame"
-                android:text="@string/memory_master"
-                tools:ignore="ButtonStyle" />
+                android:text="@string/memory_master" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="bottom"
+            android:layout_marginTop="42dp"
+            android:text="@string/difficulty_label"
+            android:textSize="26sp"
+            android:textColor="@color/colorPrimaryDark" />
 
         <Spinner
             android:id="@+id/difficultySpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="26dp"
+            android:gravity="top"
+            android:layout_marginBottom="26dp"
             android:entries="@array/difficultyLevels"
             android:padding="16dp" />
 
@@ -63,9 +77,11 @@
             android:layout_height="match_parent">
 
             <Button
+                style="@style/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:padding="16dp"
                 android:onClick="highScoresClicked"
                 android:text="@string/high_scores" />
         </RelativeLayout>

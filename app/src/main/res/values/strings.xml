@@ -27,4 +27,7 @@
     <string name="working">Working....</string>
     <string name="ImgDescription">Tick or cross depending on the answer</string>
     <string name="tweet_image_description">Arrow showing where to tweet your high score.</string>
+    <string name="difficulty_label">Select your difficulty:</string>
+    <string name="default_time">Time: 00</string>
+    <string name="default_score">Score: 00</string>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#1A48EA"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context=".SettingsFragment">
 
@@ -12,7 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_margin="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorBackground"
         android:src="@android:drawable/ic_notification_clear_all"
         android:contentDescription="@string/settings_button" />
 
@@ -22,10 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:padding="16dp"
+        android:layout_margin="10dp"
+        android:padding="10dp"
         android:checked="true"
-        android:text="@string/music" />
+        android:text="@string/music"
+        android:textSize="18sp" />
 
     <Switch
         android:id="@+id/soundSwitch"
@@ -33,18 +38,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:padding="16dp"
+        android:layout_margin="10dp"
+        android:padding="10dp"
         android:checked="true"
-        android:text="@string/sound" />
+        android:text="@string/sound"
+        android:textSize="18sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="bottom"
+        android:layout_marginTop="16dp"
         android:textSize="20sp"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimaryDark"
         android:text="@string/difficulty" />
 
     <Spinner
@@ -53,8 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="top"
+        android:paddingStart="36dp"
+        android:paddingEnd="36dp"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="36dp"
         android:entries="@array/difficultyLevels" />
 
 </LinearLayout>

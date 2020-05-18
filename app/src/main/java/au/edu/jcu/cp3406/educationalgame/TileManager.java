@@ -23,7 +23,7 @@ class TileManager {
         }
     }
 
-    private Bitmap getTileImage(int i) {
+    public Bitmap getTileImage(int i) {
         InputStream stream = null;
         try {
             stream = assetManager.open("Shapes/" + shapes[i]);

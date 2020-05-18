@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -54,7 +56,7 @@ public class ExampleInstrumentedTest {
         while (cursor.moveToNext()) {
             int existingScore = cursor.getInt(1);
             if (newScore > existingScore) {
-                dbhelper.insertScore(db, "08-05-20", level, newScore);
+                dbhelper.insertScore(db, "08-05-20", level, newScore, "MATHS");
                 Log.i("ExInstTest","New high score added!");
                 break;
             }
@@ -82,5 +84,27 @@ public class ExampleInstrumentedTest {
 
         cursor.close();
         db.close();
+    }
+
+    @Test
+    public void getTiles() {
+        int NUM_TILES = 3;   //Depending on difficulty level
+        TileManager tileManager = new TileManager(appContext.getAssets(), "Shapes");   //Read images in from asset folder
+        List<Tile> list = new ArrayList<>();
+        Bitmap[] selected = new Bitmap[2];
+
+        //Get the shape pairs and store them as a tile
+        for (int i = 0; i < NUM_TILES * 2; i += 2) {
+            selected[0] = tileManager.getTileImage(i);
+            selected[1] = tileManager.getTileImage(i + 1);
+            list.add(new Tile(selected));
+        }
+        Tile[] tiles = new Tile[list.size()];
+        list.toArray(tiles);
+
+        //tiles should be a Tile arrary with the dark image active
+        assertEquals(tileManager.getTileImage(0), tiles[0].getActive());
+        assertEquals(tileManager.getTileImage(2), tiles[1].getActive());
+        assertEquals(tileManager.getTileImage(4), tiles[2].getActive());
     }
 }

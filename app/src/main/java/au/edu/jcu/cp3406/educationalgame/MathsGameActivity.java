@@ -96,6 +96,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     @Override
     public void onPause() {
         super.onPause();
+        soundManager.muteMusic();
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
@@ -148,6 +149,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     public void onBackPressed() {
         super.onBackPressed();
         handler.removeCallbacks(runnable);
+        finish();
     }
 
     @Override
@@ -155,6 +157,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         super.onDestroy();
         soundManager.closeAudio();
         handler.removeCallbacks(runnable);
+        finish();
     }
 
     public void checkSelected(View view) {

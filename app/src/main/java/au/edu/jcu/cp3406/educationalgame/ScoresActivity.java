@@ -8,8 +8,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
@@ -19,6 +23,10 @@ import java.util.Objects;
 public class ScoresActivity extends BaseActivity implements StateListener {
     public static int SETTINGS_REQUEST = 222;
     private Game game = Game.MATHS;  //Which game to restart
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,20 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);*/
 
+        //ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager != null) {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Log.i("Sensor detection", "No accelerometer found on device");
+        }
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake() {
+                handleShakeEvent();
+            }
+        });
+
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
@@ -46,6 +68,18 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         onBackPressed();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(mShakeDetector);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -88,5 +122,10 @@ public class ScoresActivity extends BaseActivity implements StateListener {
                     return "BLANK";
             }
         }
+    }
+
+    void handleShakeEvent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
