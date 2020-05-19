@@ -8,7 +8,20 @@ class MathsGame {
     private int c1Answer;
     private int c2Answer;
     private int score;
-    private Random random = new Random();
+    private boolean finished;
+    private boolean correct;
+    private Random random;
+
+    MathsGame() {
+        card1 = "";
+        card2 = "";
+        c1Answer = 0;
+        c2Answer = 0;
+        score = 0;
+        finished = false;
+        correct = false;
+        random = new Random();
+    }
 
     private String generateCard(Difficulty level) {
         int num1 = 0;
@@ -90,7 +103,9 @@ class MathsGame {
                     }
                 } else if (selected == 2) {
                     return c2Answer > c1Answer;
-                } else return c1Answer > c2Answer;
+                } else {
+                    return c1Answer > c2Answer;
+                }
             case "Lower":
                 if (selected == 3) {
                     if (c1Answer == c2Answer) {
@@ -98,9 +113,23 @@ class MathsGame {
                     }
                 } else if (selected == 2) {
                     return c2Answer < c1Answer;
-                } else return c1Answer < c2Answer;
+                } else {
+                    return c1Answer < c2Answer;
+                }
         }
         return false;
+    }
+
+    boolean isRunning() {
+        return finished;
+    }
+
+    void gameOver() {
+        finished = true;
+    }
+
+    void startGame() {
+        finished = false;
     }
 
     void setScore(int points) {

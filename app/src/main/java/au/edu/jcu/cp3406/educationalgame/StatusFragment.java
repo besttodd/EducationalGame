@@ -7,8 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.Objects;
 
 public class StatusFragment extends Fragment {
+    View view;
+    TextView score;
 
     public StatusFragment() {
         // Required empty public constructor
@@ -19,6 +24,12 @@ public class StatusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_status, container, false);
+        view = inflater.inflate(R.layout.fragment_status, container, false);
+        score = view.findViewById(R.id.scoreDisplay);
+        return view;
+    }
+
+    public void setScore(String points) {
+        score.setText(points);
     }
 }

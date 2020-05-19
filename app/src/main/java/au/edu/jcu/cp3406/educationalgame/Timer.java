@@ -25,7 +25,7 @@ public class Timer {
         isRunning = true;
     }
 
-    private void stopTimer() {
+    void stopTimer() {
         isRunning = false;
     }
 

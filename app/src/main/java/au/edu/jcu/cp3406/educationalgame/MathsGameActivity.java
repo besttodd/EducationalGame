@@ -21,16 +21,14 @@ import android.widget.TextView;
 
 public class MathsGameActivity extends BaseActivity implements StateListener {
     static String GAME_TIME = "00:15";
-    static int POINTS_CORRECT = 10;
-    static int POINTS_INCORRECT = 10;
     private Difficulty level;
     private SoundManager soundManager;
     private Timer timer;
-    private boolean result = false;
-    private MathsGame game = new MathsGame();
     private final Handler handler = new Handler();
     private Runnable runnable;
-    private Fragment settingsFragment;
+    private StatusFragment statusFragment;
+    private SettingsFragment settingsFragment;
+    private MathsGameFragment gameFragment;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -44,10 +42,11 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         setSupportActionBar(toolbar);
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment gameFragment = fm.findFragmentById(R.id.game);
-        settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        boolean isLargeScreen = gameFragment != null;
-        if (!isLargeScreen) {
+        gameFragment = (MathsGameFragment) fm.findFragmentById(R.id.gameFragment);
+        statusFragment = (StatusFragment) fm.findFragmentById(R.id.statusFragment);
+        settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
+        String screen = getResources().getString(R.string.screen_type);
+        if (screen.equals("phone")) {
             hideFragment(settingsFragment);
         }
 
@@ -75,7 +74,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
 
         timer = new Timer(GAME_TIME);
         startTimer();
-        newRound(level);
+        gameFragment.newRound(level);
     }
 
     @Override
@@ -96,7 +95,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     @Override
     public void onPause() {
         super.onPause();
-        soundManager.muteMusic();
+        //soundManager.muteMusic();
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
@@ -137,7 +136,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
                 finish();
                 intent = new Intent(this, ResultsActivity.class);
                 intent.putExtra("difficulty", level);
-                intent.putExtra("score", game.getScore());
+                intent.putExtra("score", gameFragment.getScore());
                 intent.putExtra("game", Game.MATHS);
                 startActivity(intent);
                 break;
@@ -155,40 +154,9 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        soundManager.closeAudio();
+        //soundManager.closeAudio();
         handler.removeCallbacks(runnable);
         finish();
-    }
-
-    public void checkSelected(View view) {
-        TextView score = findViewById(R.id.scoreDisplay);
-        ImageView mark = findViewById(R.id.markImage);
-        int selectedCard = view.getId();
-
-        switch (selectedCard) {
-            case R.id.card1Button:
-                result = game.checkCards(1, "Higher");
-                break;
-            case R.id.card2Button:
-                result = game.checkCards(2, "Higher");
-                break;
-            case R.id.equalButton:
-                result = game.checkCards(3, "Higher");
-                break;
-        }
-
-        if (result) {
-            soundManager.playSound(1);
-            mark.setImageResource(R.drawable.correct);
-            game.setScore(POINTS_CORRECT);
-            score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
-        } else {
-            soundManager.playSound(0);
-            mark.setImageResource(R.drawable.incorrect);
-            game.setScore(POINTS_INCORRECT);
-            score.setText(String.format("Score: %s", Integer.toString(game.getScore())));
-        }
-        newRound(level);
     }
 
     private void startTimer() {
@@ -210,17 +178,6 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         });
     }
 
-    void newRound(Difficulty level) {
-        Button card1 = findViewById(R.id.card1Button);
-        Button card2 = findViewById(R.id.card2Button);
-        game.setCards(level);
-
-        if (timer.isRunning()) {
-            card1.setText(game.getCard1());
-            card2.setText(game.getCard2());
-        }
-    }
-
     public void showFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.show(fragment);
@@ -236,5 +193,9 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     void handleShakeEvent() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public boolean isTimerRunning() {
+        return timer.isRunning();
     }
 }

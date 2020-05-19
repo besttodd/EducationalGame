@@ -17,7 +17,7 @@ android:orientation="vertical">
     android:baselineAligned="false">
 
     <fragment
-        android:id="@+id/game"
+        android:id="@+id/gameFragment"
         android:name="au.edu.jcu.cp3406.educationalgame.MathsGameFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
