@@ -73,6 +73,8 @@ class MemoryGame {
         score = score + points;
     }
 
+    void setSequence(List<Integer> sequence) { this.sequence = sequence; }
+
     int getScore() {
         return score;
     }

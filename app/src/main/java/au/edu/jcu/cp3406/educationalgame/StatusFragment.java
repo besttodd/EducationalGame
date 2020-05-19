@@ -31,9 +31,8 @@ public class StatusFragment extends Fragment {
         return view;
     }
 
-    public void setScore(String points, String rounds) {
+    void setScore(String points, String rounds) {
         score.setText(points);
-
         if (!rounds.equals("0")) { time.setText(rounds);}
     }
 }

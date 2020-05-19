@@ -5,14 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.Objects;
 
@@ -47,7 +45,7 @@ public class MathsGameFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maths_game, container, false);
 
-        level = (Difficulty) getActivity().getIntent().getSerializableExtra("difficulty");
+        level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
         soundManager = ((SoundManager) context.getApplicationContext());
 
         statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragment);
@@ -118,5 +116,10 @@ public class MathsGameFragment extends Fragment {
 
     int getScore() {
         return game.getScore();
+    }
+
+    void setScore(int score) {
+        game.setScore(score);
+        statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())), "0");
     }
 }

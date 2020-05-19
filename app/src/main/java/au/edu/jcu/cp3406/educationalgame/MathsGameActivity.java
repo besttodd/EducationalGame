@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -69,8 +70,14 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
             equals.setVisibility(View.VISIBLE);
         }
 
-        timer = new Timer(GAME_TIME);
-        startTimer();
+        if (savedInstanceState == null) {
+            timer = new Timer(GAME_TIME);
+            startTimer();
+        } else {
+            timer = new Timer(savedInstanceState.getString("time"));
+            startTimer();
+            gameFragment.setScore(savedInstanceState.getInt("score"));
+        }
         gameFragment.newRound(level);
     }
 
@@ -103,8 +110,10 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("time", timer.toString());
+        outState.putInt("score", gameFragment.getScore());
     }
 
     @Override
@@ -153,7 +162,6 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         super.onDestroy();
         //soundManager.closeAudio();
         handler.removeCallbacks(runnable);
-        finish();
     }
 
     private void startTimer() {

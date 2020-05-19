@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,11 +11,9 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 public class MemoryGameActivity extends BaseActivity implements StateListener {
     private SoundManager soundManager;
@@ -53,9 +52,6 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
                 handleShakeEvent();
             }
         });
-
-        TextView roundsDisplay = findViewById(R.id.timeDisplay);
-        roundsDisplay.setText(String.format("Rounds: %s", "0"));
     }
 
     @Override
@@ -71,6 +67,11 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -66,8 +66,10 @@ public class SoundManager extends Application {
     public void toggleSound() {
         if (soundOn == 1) {
             muteSound();
+            soundOn = 0;
         } else {
             unMuteSound();
+            soundOn = 1;
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.os.Handler;
 import android.util.Log;
@@ -14,20 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MemoryGameFragment extends Fragment {
-    private static final int POINTS_CORRECT = 10;
+    private static final int POINTS = 10;
     private Difficulty level;
     private SoundManager soundManager;
     private Context context;
@@ -66,15 +61,20 @@ public class MemoryGameFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_memory_game, container, false);
 
-        statusFragment = (StatusFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.statusFragment);
-
-        level = (Difficulty) getActivity().getIntent().getSerializableExtra("difficulty");
         soundManager = (SoundManager) context.getApplicationContext();
-        rounds = 0;
-
-        statusFragment.setScore(String.format("Score: %s", Integer.toString(memoryGame.getScore())), String.format("Rounds: %s", rounds));
         TileManager tileManager = new TileManager(context.getAssets(), "Shapes");
-        sequence = memoryGame.newGame(level);
+        level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
+        assert level != null;
+        if (savedInstanceState == null) {
+            sequence = memoryGame.newGame(level);
+            rounds = 0;
+        } else {
+            sequence = (List<Integer>) savedInstanceState.getSerializable("sequence");
+            memoryGame.setSequence(sequence);
+            rounds = savedInstanceState.getInt("rounds");
+            memoryGame.setScore(savedInstanceState.getInt("score"));
+            //statusFragment.setScore(String.format("Score: %s", Integer.toString(score)), String.format("Rounds: %s", rounds));
+        }
         tiles = tileManager.getTiles(memoryGame.getNumTiles());
         gridView = view.findViewById(R.id.gridView);
         tileAdapter = new TileAdapter(context, tiles);
@@ -98,7 +98,7 @@ public class MemoryGameFragment extends Fragment {
                     listener.onUpdate(State.GAME_OVER, level);
                 } else if (memoryGame.isSequenceComplete()) {
                     Toast.makeText(context, "YOU GOT IT\nKeep Going!", Toast.LENGTH_SHORT).show();
-                    memoryGame.setScore(POINTS_CORRECT);
+                    memoryGame.setScore(POINTS);
                     rounds++;
                     statusFragment.setScore(String.format("Score: %s", Integer.toString(memoryGame.getScore())), String.format("Rounds: %s", rounds));
                     sequence = memoryGame.createSequence(answers.size());
@@ -111,6 +111,22 @@ public class MemoryGameFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragmentM);
+        assert statusFragment != null;
+        statusFragment.setScore(String.format("Score: %s", Integer.toString(memoryGame.getScore())), String.format("Rounds: %s", rounds));
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("sequence", (Serializable) sequence);
+        outState.putInt("rounds", rounds);
+        outState.putInt("score", memoryGame.getScore());
     }
 
     @Override
