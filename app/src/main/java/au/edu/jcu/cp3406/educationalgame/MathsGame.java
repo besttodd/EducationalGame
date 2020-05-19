@@ -8,8 +8,6 @@ class MathsGame {
     private int c1Answer;
     private int c2Answer;
     private int score;
-    private boolean finished;
-    private boolean correct;
     private Random random;
 
     MathsGame() {
@@ -18,8 +16,6 @@ class MathsGame {
         c1Answer = 0;
         c2Answer = 0;
         score = 0;
-        finished = false;
-        correct = false;
         random = new Random();
     }
 
@@ -118,18 +114,6 @@ class MathsGame {
                 }
         }
         return false;
-    }
-
-    boolean isRunning() {
-        return finished;
-    }
-
-    void gameOver() {
-        finished = true;
-    }
-
-    void startGame() {
-        finished = false;
     }
 
     void setScore(int points) {

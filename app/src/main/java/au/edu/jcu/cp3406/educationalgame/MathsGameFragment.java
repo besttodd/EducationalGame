@@ -17,11 +17,9 @@ import android.widget.TextView;
 import java.util.Objects;
 
 public class MathsGameFragment extends Fragment {
-    static String GAME_TIME = "00:15";
-    private static int POINTS_CORRECT = 10;
-    private static int POINTS_INCORRECT = -10;
+    private static final int POINTS_CORRECT = 10;
+    private static final int POINTS_INCORRECT = -10;
     private SoundManager soundManager;
-    private StateListener listener;
     private Difficulty level;
     private MathsGame game;
 
@@ -54,7 +52,6 @@ public class MathsGameFragment extends Fragment {
 
         statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragment);
         assert statusFragment != null;
-        //score = Objects.requireNonNull(statusFragment.getView()).findViewById(R.id.scoreDisplay);
         mark = view.findViewById(R.id.markImage);
         Button equals = view.findViewById(R.id.equalButton);
         if (level == Difficulty.MASTER) {

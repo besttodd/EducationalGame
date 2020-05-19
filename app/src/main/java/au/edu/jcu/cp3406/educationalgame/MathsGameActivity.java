@@ -16,17 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MathsGameActivity extends BaseActivity implements StateListener {
     static String GAME_TIME = "00:15";
     private Difficulty level;
-    private SoundManager soundManager;
+    //private SoundManager soundManager;
     private Timer timer;
     private final Handler handler = new Handler();
     private Runnable runnable;
-    private StatusFragment statusFragment;
     private SettingsFragment settingsFragment;
     private MathsGameFragment gameFragment;
 
@@ -43,7 +41,6 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
 
         FragmentManager fm = getSupportFragmentManager();
         gameFragment = (MathsGameFragment) fm.findFragmentById(R.id.gameFragment);
-        statusFragment = (StatusFragment) fm.findFragmentById(R.id.statusFragment);
         settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
         String screen = getResources().getString(R.string.screen_type);
         if (screen.equals("phone")) {
@@ -64,7 +61,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
             }
         });
 
-        soundManager = ((SoundManager) getApplication());
+        //soundManager = ((SoundManager) getApplication());
         level = (Difficulty) getIntent().getSerializableExtra("difficulty");
 
         Button equals = findViewById(R.id.equalButton);
