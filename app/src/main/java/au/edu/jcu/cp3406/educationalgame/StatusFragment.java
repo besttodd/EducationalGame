@@ -14,6 +14,7 @@ import java.util.Objects;
 public class StatusFragment extends Fragment {
     View view;
     TextView score;
+    TextView time;
 
     public StatusFragment() {
         // Required empty public constructor
@@ -26,10 +27,13 @@ public class StatusFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_status, container, false);
         score = view.findViewById(R.id.scoreDisplay);
+        time = view.findViewById(R.id.timeDisplay);
         return view;
     }
 
-    public void setScore(String points) {
+    public void setScore(String points, String rounds) {
         score.setText(points);
+
+        if (!rounds.equals("0")) { time.setText(rounds);}
     }
 }

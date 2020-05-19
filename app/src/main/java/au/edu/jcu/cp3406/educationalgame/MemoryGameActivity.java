@@ -14,35 +14,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class MemoryGameActivity extends BaseActivity implements StateListener {
-    static int POINTS_CORRECT = 10;
-    private Difficulty level;
     private SoundManager soundManager;
-
-    private Tile[] tiles;
-    private TileAdapter tileAdapter;
-    private GridView gridView;
-    private Fragment settingsFragment;
-
-    private MemoryGame memoryGame = new MemoryGame();
-    private List<Integer> sequence;
-    private List<Integer> answers;
-    private Integer[] previous = {0};
-    private Iterator<Integer> iterator;
-    private int rounds;
-
-    private final Handler handler = new Handler();
-    private Runnable runnable;
+    private SettingsFragment settingsFragment;
+    private MemoryGameFragment memoryGameFragment;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -56,10 +33,10 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
         setSupportActionBar(toolbar);
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment gameFragment = fm.findFragmentById(R.id.memoryGameFragment);
-        settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        boolean isLargeScreen = gameFragment != null;
-        if (!isLargeScreen) {
+        memoryGameFragment = (MemoryGameFragment) fm.findFragmentById(R.id.memoryGameFragment);
+        settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
+        String screen = getResources().getString(R.string.screen_type);
+        if (screen.equals("phone")) {
             hideFragment(settingsFragment);
         }
 
@@ -77,40 +54,8 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             }
         });
 
-        soundManager = (SoundManager) getApplication();
-        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
-        rounds = 0;
         TextView roundsDisplay = findViewById(R.id.timeDisplay);
-        roundsDisplay.setText(String.format("Rounds: %s", rounds));
-        TileManager tileManager = new TileManager(this.getAssets(), "Shapes");
-        sequence = memoryGame.newGame(level);
-        tiles = tileManager.getTiles(memoryGame.getNumTiles());
-        gridView = findViewById(R.id.gridView);
-        tileAdapter = new TileAdapter(this, tiles);
-        gridView.setAdapter(tileAdapter);
-        answers = new ArrayList<>();
-
-        playSequence();
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Tile tile = tiles[position];
-                tiles[previous[0]].lightOff();
-
-                tile.lightUp();
-                soundManager.playSound(3);
-                answers.add(position);
-                previous[0] = position;
-
-                if (!memoryGame.checkOrder(answers)) {
-                    onUpdate(State.GAME_OVER, level);
-                } else if (memoryGame.isSequenceComplete()) {
-                    onUpdate(State.CONTINUE, level);
-                }
-                tileAdapter.notifyDataSetChanged();
-            }
-        });
+        roundsDisplay.setText(String.format("Rounds: %s", "0"));
     }
 
     @Override
@@ -142,8 +87,6 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
 
     @Override
     public void onUpdate(State state, Difficulty level) {
-        TextView score = findViewById(R.id.scoreDisplay);
-        TextView roundsDisplay = findViewById(R.id.timeDisplay);
         Intent intent;
 
         switch (state) {
@@ -153,64 +96,20 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             case SHAKE:
             case RESTART:
                 intent = getIntent();
-                handler.removeCallbacks(runnable);
                 finish();
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
                 break;
             case CONTINUE:
-                Toast.makeText(getBaseContext(), "YOU GOT IT\nKeep Going!", Toast.LENGTH_SHORT).show();
-                memoryGame.setScore(POINTS_CORRECT);
-                score.setText(String.format("Score: %s", Integer.toString(memoryGame.getScore())));
-                rounds++;
-                roundsDisplay.setText(String.format("Rounds: %s", rounds));
-                sequence = memoryGame.createSequence(answers.size());
-                answers = new ArrayList<>();
-                playSequence();
                 break;
             case GAME_OVER:
                 intent = new Intent(this, ResultsActivity.class);
-                intent.putExtra("score", memoryGame.getScore());
+                intent.putExtra("score", memoryGameFragment.getScore());
                 intent.putExtra("difficulty", level);
                 intent.putExtra("game", Game.MEMORY);
                 startActivity(intent);
                 break;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacks(runnable);
-    }
-
-    public void playSequence() {
-        iterator = sequence.iterator();
-
-        handler.post(runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (iterator.hasNext()) {
-                    tiles[previous[0]].lightOff();
-                    previous[0] = iterator.next();
-                    gridView.setAdapter(tileAdapter);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            tiles[previous[0]].lightUp();
-                            soundManager.playSound(3);
-                            gridView.setAdapter(tileAdapter);
-                        }
-                    }, 1000);
-                    handler.postDelayed(this, memoryGame.getSpeed());
-                } else {
-                    tiles[previous[0]].lightOff();
-                    gridView.setAdapter(tileAdapter);
-                    Toast.makeText(getBaseContext(), "YOUR TURN", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        Log.i("Sequence", String.valueOf(sequence));
     }
 
     public void showFragment(Fragment fragment) {

@@ -106,12 +106,12 @@ public class MathsGameFragment extends Fragment {
             soundManager.playSound(1);
             mark.setImageResource(R.drawable.correct);
             game.setScore(POINTS_CORRECT);
-            statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())));
+            statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())), "0");
         } else {
             soundManager.playSound(0);
             mark.setImageResource(R.drawable.incorrect);
             game.setScore(POINTS_INCORRECT);
-            statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())));
+            statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())), "0");
         }
         newRound(level);
     }

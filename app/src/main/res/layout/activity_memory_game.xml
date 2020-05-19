@@ -16,27 +16,17 @@
             layout="@layout/toolbar_main" />
 
         <fragment
-            android:id="@+id/timeAndScore"
+            android:id="@+id/statusFragment"
             android:name="au.edu.jcu.cp3406.educationalgame.StatusFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:text="@string/remember_the_order"
-            android:textSize="20sp" />
-
-        <GridView
-            android:id="@+id/gridView"
+        <fragment
+            android:id="@+id/memoryGameFragment"
+            android:name="au.edu.jcu.cp3406.educationalgame.MemoryGameFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:columnWidth="100dp"
-            android:numColumns="auto_fit" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
