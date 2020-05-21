@@ -99,6 +99,10 @@ public class SoundManager extends Application {
         return musicOn;
     }
 
+    boolean audioReady() {
+        return loaded;
+    }
+
     /*void closeAudio() {
         sounds = null;
         soundPool.release();

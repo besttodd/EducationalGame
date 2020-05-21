@@ -15,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
@@ -43,10 +44,6 @@ public class ScoresActivity extends BaseActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        /*FragmentManager fm = getSupportFragmentManager();
-        settingsFragment = fm.findFragmentById(R.id.settingsFragment);
-        hideFragment(settingsFragment);*/
-
         soundManager = (SoundManager) getApplicationContext();
 
         //ShakeDetector initialization
@@ -72,8 +69,17 @@ public class ScoresActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        onBackPressed();
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

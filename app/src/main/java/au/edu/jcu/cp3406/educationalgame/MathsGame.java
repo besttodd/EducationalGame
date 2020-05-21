@@ -95,7 +95,7 @@ class MathsGame {
 
     boolean checkCards(int selected, String task) {
         switch (task) {
-            case "Higher":
+            case "HIGHER":
                 if (selected == 3) {
                     if (c1Answer == c2Answer) {
                         return true;
@@ -105,7 +105,7 @@ class MathsGame {
                 } else {
                     return c1Answer > c2Answer;
                 }
-            case "Lower":
+            case "LOWER":
                 if (selected == 3) {
                     if (c1Answer == c2Answer) {
                         return true;
@@ -121,6 +121,14 @@ class MathsGame {
 
     void setScore(int points) {
         score = score + points;
+    }
+
+    String getTask(Difficulty level) {
+        String newTask = "HIGHER";
+        if (level == Difficulty.HARD || level == Difficulty.MASTER) {
+            if (random.nextBoolean()) { newTask = "LOWER"; }
+        }
+        return newTask;
     }
 
     int getScore() {

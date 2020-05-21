@@ -53,6 +53,7 @@ public class MemoryGameFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")  //getting sequence from MemoryActivity
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_memory_game, container, false);
@@ -100,7 +101,7 @@ public class MemoryGameFragment extends Fragment {
                     Toast.makeText(context, "YOU GOT IT\nKeep Going!", Toast.LENGTH_SHORT).show();
                     memoryGame.setScore(POINTS);
                     rounds++;
-                    statusFragment.setScore(String.format("Score: %s", Integer.toString(memoryGame.getScore())), String.format("Rounds: %s", rounds));
+                    statusFragment.setScore(memoryGame.getScore(), rounds);
                     sequence = memoryGame.createSequence(answers.size());
                     answers = new ArrayList<>();
                     playSequence();
@@ -117,7 +118,7 @@ public class MemoryGameFragment extends Fragment {
         super.onStart();
         statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragmentM);
         assert statusFragment != null;
-        statusFragment.setScore(String.format("Score: %s", Integer.toString(memoryGame.getScore())), String.format("Rounds: %s", rounds));
+        statusFragment.setScore(memoryGame.getScore(), rounds);
     }
 
     @Override

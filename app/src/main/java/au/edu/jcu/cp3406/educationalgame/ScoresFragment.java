@@ -23,11 +23,9 @@ public class ScoresFragment extends Fragment {
     private SQLiteDatabase db;
     private Cursor cursor;
 
-    private ArrayList<String> idList = new ArrayList<>();
     private ArrayList<String> dateList = new ArrayList<>();
     private ArrayList<String> difficultyList = new ArrayList<>();
     private ArrayList<Integer> scoreList = new ArrayList<>();
-    private ArrayList<String> gameList = new ArrayList<>();
 
     public ScoresFragment() {
         game = "Maths";
@@ -53,20 +51,18 @@ public class ScoresFragment extends Fragment {
         DBHelper dbHelper = new DBHelper(context);
         try {
             db = dbHelper.getReadableDatabase();
-            cursor = db.query("HIGHSCORES", new String[]{"_id", "DATE", "DIFFICULTY", "SCORE", "GAME"},
+            cursor = db.query("HIGHSCORES", new String[]{"DATE", "DIFFICULTY", "SCORE", "GAME"},
                     "GAME = ?", new String[]{game}, null, null, "SCORE" + " DESC, DIFFICULTY" + " DESC");
 
             if (cursor.moveToFirst()) {
                 do {
-                    idList.add(cursor.getString(cursor.getColumnIndex("_id")));
                     dateList.add(cursor.getString(cursor.getColumnIndex("DATE")));
                     difficultyList.add(convert(cursor.getInt(cursor.getColumnIndex("DIFFICULTY"))));
                     scoreList.add(cursor.getInt(cursor.getColumnIndex("SCORE")));
-                    gameList.add(cursor.getString(cursor.getColumnIndex("GAME")));
                 } while (cursor.moveToNext());
             }
 
-            ScoresAdapter scoresAdapter = new ScoresAdapter(context, idList, dateList, difficultyList, scoreList, gameList);
+            ScoresAdapter scoresAdapter = new ScoresAdapter(context, dateList, difficultyList, scoreList);
             listScores.setAdapter(scoresAdapter);
         } catch (SQLiteException e) {
             Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);

@@ -45,6 +45,8 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         soundManager = (SoundManager) getApplicationContext();
         FragmentManager fm = getSupportFragmentManager();
         gameFragment = (MathsGameFragment) fm.findFragmentById(R.id.gameFragment);
+        StatusFragment statusFragment = (StatusFragment) fm.findFragmentById(R.id.statusFragment);
+        assert statusFragment != null;
         settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
         String screen = getResources().getString(R.string.screen_type);
         if (screen.equals("phone")) {
@@ -76,7 +78,7 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         } else {
             timer = new Timer(savedInstanceState.getString("time"));
             startTimer();
-            gameFragment.setScore(savedInstanceState.getInt("score"));
+            statusFragment.setScore(savedInstanceState.getInt("score"), -1);
         }
         timerPaused = false;
         gameFragment.newRound(level);

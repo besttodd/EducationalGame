@@ -77,7 +77,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        music.setChecked(soundManager.isMusicOn());
+        if (soundManager.audioReady()) {
+            music.setChecked(soundManager.isMusicOn());
+        } else {music.setChecked(true);}
         sound.setChecked(soundManager.isSoundOn());
     }
 

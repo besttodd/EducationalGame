@@ -26,10 +26,12 @@ public class StatusFragment extends Fragment {
         return view;
     }
 
-    void setScore(String points, String rounds) {
-        score.setText(points);
-        if (!rounds.equals("0")) {
-            time.setText(rounds);
+    void setScore(int points, int rounds) {
+        String textPoints = String.format("Score: %s", Integer.toString(points));
+        score.setText(textPoints);
+        if (!(rounds == -1)) {
+            String textRounds = String.format("Rounds: %s", Integer.toString(rounds));
+            time.setText(textRounds);
         }
     }
 }
