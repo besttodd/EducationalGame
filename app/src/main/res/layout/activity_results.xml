@@ -23,8 +23,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:text="@string/finished"
+            android:textColor="@color/white"
             android:textSize="32sp"
-            android:textColor="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="@color/darkBlue"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="32sp"
             app:layout_constraintBottom_toTopOf="@+id/finalScore"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,20 +49,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:textColor="@color/white"
             android:textSize="28sp"
-            android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/highScoreNotification" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/restartButton"
             style="@style/buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:onClick="restart"
+            android:layout_marginBottom="32dp"
+            android:onClick="playAgainClicked"
+            android:padding="16dp"
             android:text="@string/play_again"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -70,12 +72,14 @@
             app:layout_constraintTop_toBottomOf="@+id/finalScore" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/mainMenuButton"
             style="@style/buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:onClick="mainMenu"
+            android:layout_marginBottom="32dp"
+            android:onClick="mainMenuClicked"
+            android:padding="16dp"
             android:text="@string/main_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -86,12 +90,12 @@
             android:id="@+id/tweetImage"
             android:layout_width="89dp"
             android:layout_height="102dp"
+            android:layout_marginEnd="37dp"
+            android:contentDescription="@string/tweet_image_description"
             android:src="@drawable/tweet"
             android:visibility="invisible"
-            android:layout_marginEnd="37dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            android:contentDescription="@string/tweet_image_description" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

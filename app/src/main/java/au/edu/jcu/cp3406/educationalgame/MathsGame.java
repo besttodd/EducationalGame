@@ -27,6 +27,7 @@ class MathsGame {
         int r;
         String card;
 
+        //select a random operator 0=+, 1=-, 2=*, 3=/ depending on difficulty
         switch (level) {
             case MEDIUM:
                 r = random.nextInt(1);
@@ -40,6 +41,7 @@ class MathsGame {
                 r = 0;
         }
 
+        //create a suitable equation depending on the operator
         switch (r) {
             case 0:
                 operator = '+';
@@ -60,6 +62,7 @@ class MathsGame {
                 answer = num1 * num2;
                 break;
             case 3:
+                //implement a range of division equations to pick from
                 operator = 247;  //Divide symbol
                 num1 = 30;
                 num2 = 2;

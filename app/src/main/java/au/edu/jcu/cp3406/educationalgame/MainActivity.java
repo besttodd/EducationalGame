@@ -13,9 +13,10 @@ import android.view.View;
 import android.widget.Spinner;
 
 public class MainActivity extends BaseActivity implements StateListener {
-    Difficulty level;
-    Spinner difficultySpinner;
-    Fragment settingsFragment;
+    private Difficulty level;
+    private SoundManager soundManager;
+    private Spinner difficultySpinner;
+    private Fragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +25,16 @@ public class MainActivity extends BaseActivity implements StateListener {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        level = Difficulty.EASY;
+        soundManager = (SoundManager) getApplicationContext();
         FragmentManager fm = getSupportFragmentManager();
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);
-
         difficultySpinner = findViewById(R.id.difficultySpinner);
-        level = Difficulty.EASY;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu on the app bar.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -52,34 +52,33 @@ public class MainActivity extends BaseActivity implements StateListener {
     protected void onPause() {
         super.onPause();
         hideFragment(settingsFragment);
+        soundManager.pauseMusic();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //if (allowRefresh)
-        //{
-        //allowRefresh = false;
-        getSupportFragmentManager().beginTransaction().replace(R.id.settingsFragment, settingsFragment).commit();
-        //}
+        if (soundManager.isMusicOn()) {
+            soundManager.resumeMusic();
+        } else {
+            soundManager.pauseMusic();
+        }
     }
 
-    public void startHLGame(View view) {
+    @Override
+    public void onUpdate(State state, Difficulty level) {
+        if (state == State.SETTINGS) {
+            hideFragment(settingsFragment);
+        }
+    }
+
+    public void startMathsGame(View view) {
         String selection = difficultySpinner.getSelectedItem().toString();
         level = Difficulty.valueOf(selection.toUpperCase());
 
         Intent intent = new Intent(this, MathsGameActivity.class);
         intent.putExtra("difficulty", level);
         startActivity(intent);
-    }
-
-    @Override
-    public void onUpdate(State state, Difficulty level) {
-        switch (state) {
-            case SETTINGS:
-                hideFragment(settingsFragment);
-                break;
-        }
     }
 
     public void startMemoryGame(View view) {

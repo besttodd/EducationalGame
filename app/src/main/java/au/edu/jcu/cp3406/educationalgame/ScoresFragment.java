@@ -72,7 +72,6 @@ public class ScoresFragment extends Fragment {
             Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
         }
-
         return view;
     }
 

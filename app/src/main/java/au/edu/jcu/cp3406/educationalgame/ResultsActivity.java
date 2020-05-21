@@ -1,5 +1,6 @@
 package au.edu.jcu.cp3406.educationalgame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,15 +28,14 @@ import java.util.Objects;
 public class ResultsActivity extends BaseActivity implements StateListener {
     private static final int MAX_SCORES = 7;
     private Difficulty level;
-
+    private SoundManager soundManager;
     private SQLiteDatabase db;
     private Cursor cursor;
-
+    private SettingsFragment settingsFragment;
     private Game game;
-    private Fragment settingsFragment;
     private TextView highScore;
     private ImageView tweetImage;
-    private String highScoreTweet;
+    private String tweetText;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -48,8 +48,10 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        soundManager = (SoundManager) getApplicationContext();
+
         FragmentManager fm = getSupportFragmentManager();
-        settingsFragment = fm.findFragmentById(R.id.settingsFragment);
+        settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);
 
         //ShakeDetector initialization
@@ -69,13 +71,12 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         TextView scoreDisplay = findViewById(R.id.finalScore);
         highScore = findViewById(R.id.highScoreNotification);
         tweetImage = findViewById(R.id.tweetImage);
-        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
         game = (Game) getIntent().getSerializableExtra("game");
+        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
         assert level != null;
         int convertedLevel = convert(level);
         int newScore = Objects.requireNonNull(getIntent().getExtras()).getInt("score");
         scoreDisplay.setText(String.valueOf(newScore));
-        highScoreTweet = "My new High Score on " + game + " MASTER is " + newScore;
 
         DBHelper dbhelper = new DBHelper(this);
         db = dbhelper.getWritableDatabase();
@@ -91,6 +92,8 @@ public class ResultsActivity extends BaseActivity implements StateListener {
                 if (newScore > existingScore) {
                     saveScore(dbhelper, newScore, convertedLevel, game.toString());
                     break;
+                } else {
+                    tweetText = "I'm playing " + game + " MASTER! Last score was " + newScore;
                 }
             }
         }
@@ -108,7 +111,9 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         switch (item.getItemId()) {
             case R.id.action_open_twitter:
                 Intent intent = new Intent(this, Twitter_Activity.class);
-                intent.putExtra("highScore", highScoreTweet);
+                intent.putExtra("highScore", tweetText);
+                intent.putExtra("game", game);
+                intent.putExtra("difficulty", level);
                 startActivity(intent);
                 return true;
             case R.id.action_open_settings:
@@ -122,14 +127,26 @@ public class ResultsActivity extends BaseActivity implements StateListener {
     @Override
     public void onPause() {
         super.onPause();
+        soundManager.pauseMusic();
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (soundManager.isMusicOn()) {
+            soundManager.resumeMusic();
+        } else {
+            soundManager.pauseMusic();
+        }
         hideFragment(settingsFragment);
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("highScore", "Well Done\nYou got a HIGH SCORE!");
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -138,16 +155,8 @@ public class ResultsActivity extends BaseActivity implements StateListener {
             case SETTINGS:
                 hideFragment(settingsFragment);
                 break;
-            case SHAKE:
             case RESTART:
-                Intent intent;
-                if (game.equals(Game.MATHS)) {
-                    intent = new Intent(this, MathsGameActivity.class);
-                } else {
-                    intent = new Intent(this, MemoryGameActivity.class);
-                }
-                intent.putExtra("difficulty", level);
-                startActivity(intent);
+                restart(level);
                 break;
         }
     }
@@ -163,6 +172,7 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         dbhelper.insertScore(db, getDate(), newLevel, newScore, game);
         highScore.setText("Well Done\nYou got a HIGH SCORE!");
         tweetImage.setVisibility(View.VISIBLE);
+        tweetText = "My new High Score on " + game + " MASTER is " + newScore;
         Log.i("Results", "New high score added!");
     }
 
@@ -189,18 +199,11 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         return new SimpleDateFormat("dd-MM-yy", Locale.getDefault()).format(new Date());
     }
 
-    public void restart(View view) {
-        Intent intent;
-        if (game.equals(Game.MATHS)) {
-            intent = new Intent(this, MathsGameActivity.class);
-        } else {
-            intent = new Intent(this, MemoryGameActivity.class);
-        }
-        intent.putExtra("difficulty", level);
-        startActivity(intent);
+    public void playAgainClicked(View view) {
+        restart(level);
     }
 
-    public void mainMenu(View view) {
+    public void mainMenuClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -217,8 +220,19 @@ public class ResultsActivity extends BaseActivity implements StateListener {
         ft.commit();
     }
 
-    void handleShakeEvent() {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void handleShakeEvent() {
+        restart(level);
+        Log.i("SensorActivated", "Shake event detected");
+    }
+
+    public void restart(Difficulty level) {
+        Intent intent;
+        if (game.equals(Game.MATHS)) {
+            intent = new Intent(this, MathsGameActivity.class);
+        } else {
+            intent = new Intent(this, MemoryGameActivity.class);
+        }
+        intent.putExtra("difficulty", level);
         startActivity(intent);
     }
 }

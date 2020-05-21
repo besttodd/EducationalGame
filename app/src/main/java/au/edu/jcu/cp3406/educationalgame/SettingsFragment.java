@@ -16,11 +16,12 @@ import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
     private Difficulty level;
-    private StateListener listener;
     private SoundManager soundManager;
+    private StateListener listener;
+    private Switch sound;
+    private Switch music;
 
     public SettingsFragment() {
-        // Required empty public constructor
         level = Difficulty.EASY;
     }
 
@@ -40,12 +41,9 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        final Switch sound = view.findViewById(R.id.soundSwitch);
-        final Switch music = view.findViewById(R.id.musicSwitch);
+        sound = view.findViewById(R.id.soundSwitch);
+        music = view.findViewById(R.id.musicSwitch);
         final Spinner spinner = view.findViewById(R.id.settingsdifficulty);
-
-        music.setChecked(soundManager.isMusicOn());
-        sound.setChecked(soundManager.isSoundOn() == 1);
         spinner.setSelection(getIndex(spinner, level));
 
         sound.setOnClickListener(new Switch.OnClickListener() {
@@ -54,7 +52,6 @@ public class SettingsFragment extends Fragment {
                 soundManager.toggleSound();
             }
         });
-
         music.setOnClickListener(new Switch.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +72,13 @@ public class SettingsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        music.setChecked(soundManager.isMusicOn());
+        sound.setChecked(soundManager.isSoundOn());
     }
 
     private int getIndex(Spinner spinner, Difficulty level) {

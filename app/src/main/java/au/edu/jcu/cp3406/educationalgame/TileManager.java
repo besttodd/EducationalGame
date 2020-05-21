@@ -19,11 +19,11 @@ class TileManager {
         try {
             shapes = assetManager.list(assetPath);
         } catch (IOException e) {
-            Log.i("TileManger", "Failed to get image names");
+            Log.i("TileManger", "Failed to get image shapes");
         }
     }
 
-    public Bitmap getTileImage(int i) {
+    Bitmap getTileImage(int i) {
         InputStream stream = null;
         try {
             stream = assetManager.open("Shapes/" + shapes[i]);
@@ -38,6 +38,7 @@ class TileManager {
         List<Tile> list = new ArrayList<>();
         Bitmap[] selected = new Bitmap[2];
 
+        //select a number of shape pairs. Dark and light images of the same shape
         for (int i = 0; i < numTiles * 2; i += 2) {
             selected[0] = getTileImage(i);
             selected[1] = getTileImage(i + 1);

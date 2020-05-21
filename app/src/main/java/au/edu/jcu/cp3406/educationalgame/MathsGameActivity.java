@@ -20,10 +20,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MathsGameActivity extends BaseActivity implements StateListener {
-    static String GAME_TIME = "00:15";
+    private String gameTime = "00:15";
     private Difficulty level;
-    //private SoundManager soundManager;
+    private SoundManager soundManager;
     private Timer timer;
+    private boolean timerPaused;
     private final Handler handler = new Handler();
     private Runnable runnable;
     private SettingsFragment settingsFragment;
@@ -40,6 +41,8 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        soundManager = (SoundManager) getApplicationContext();
         FragmentManager fm = getSupportFragmentManager();
         gameFragment = (MathsGameFragment) fm.findFragmentById(R.id.gameFragment);
         settingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settingsFragment);
@@ -62,22 +65,20 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
             }
         });
 
-        //soundManager = ((SoundManager) getApplication());
-        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
-
         Button equals = findViewById(R.id.equalButton);
         if (level == Difficulty.MASTER) {
             equals.setVisibility(View.VISIBLE);
         }
 
         if (savedInstanceState == null) {
-            timer = new Timer(GAME_TIME);
+            timer = new Timer(gameTime);
             startTimer();
         } else {
             timer = new Timer(savedInstanceState.getString("time"));
             startTimer();
             gameFragment.setScore(savedInstanceState.getInt("score"));
         }
+        timerPaused = false;
         gameFragment.newRound(level);
     }
 
@@ -99,13 +100,25 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     @Override
     public void onPause() {
         super.onPause();
-        //soundManager.muteMusic();
+        soundManager.pauseMusic();
+        timerPaused = true;
+        gameTime = timer.toString();
+        handler.removeCallbacks(runnable);
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (soundManager.isMusicOn()) {
+            soundManager.resumeMusic();
+        } else {
+            soundManager.pauseMusic();
+        }
+        if (timerPaused) {
+            timer = new Timer(gameTime);
+            startTimer();
+        }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
@@ -117,11 +130,6 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onUpdate(State state, Difficulty level) {
         Intent intent;
 
@@ -129,7 +137,6 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
             case SETTINGS:
                 hideFragment(settingsFragment);
                 break;
-            case SHAKE:
             case RESTART:
                 intent = getIntent();
                 handler.removeCallbacks(runnable);
@@ -196,8 +203,12 @@ public class MathsGameActivity extends BaseActivity implements StateListener {
     }
 
     void handleShakeEvent() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = getIntent();
+        handler.removeCallbacks(runnable);
+        finish();
+        intent.putExtra("difficulty", level);
         startActivity(intent);
+        Log.i("SensorActivated", "Shake event detected");
     }
 
     public boolean isTimerRunning() {

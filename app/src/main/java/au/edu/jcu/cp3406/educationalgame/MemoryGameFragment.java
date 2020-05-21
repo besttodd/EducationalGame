@@ -27,19 +27,16 @@ public class MemoryGameFragment extends Fragment {
     private SoundManager soundManager;
     private Context context;
     private StateListener listener;
-
+    private MemoryGame memoryGame;
+    private StatusFragment statusFragment;
     private Tile[] tiles;
     private TileAdapter tileAdapter;
     private GridView gridView;
-    private StatusFragment statusFragment;
-
-    private MemoryGame memoryGame;
     private List<Integer> sequence;
     private List<Integer> answers;
     private Integer[] previous = {0};
     private Iterator<Integer> iterator;
     private int rounds;
-
     private final Handler handler = new Handler();
     private Runnable runnable;
 
@@ -58,13 +55,13 @@ public class MemoryGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_memory_game, container, false);
 
-        soundManager = (SoundManager) context.getApplicationContext();
-        TileManager tileManager = new TileManager(context.getAssets(), "Shapes");
         level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
         assert level != null;
+        soundManager = (SoundManager) context.getApplicationContext();
+        TileManager tileManager = new TileManager(context.getAssets(), "Shapes");
+
         if (savedInstanceState == null) {
             sequence = memoryGame.newGame(level);
             rounds = 0;
@@ -73,10 +70,13 @@ public class MemoryGameFragment extends Fragment {
             memoryGame.setSequence(sequence);
             rounds = savedInstanceState.getInt("rounds");
             memoryGame.setScore(savedInstanceState.getInt("score"));
-            //statusFragment.setScore(String.format("Score: %s", Integer.toString(score)), String.format("Rounds: %s", rounds));
         }
         tiles = tileManager.getTiles(memoryGame.getNumTiles());
         gridView = view.findViewById(R.id.gridView);
+        String screen = getResources().getString(R.string.screen_type);
+        if (screen.equals("tablet")) {
+            gridView.setColumnWidth(200);
+        }
         tileAdapter = new TileAdapter(context, tiles);
         gridView.setAdapter(tileAdapter);
         answers = new ArrayList<>();
@@ -109,7 +109,6 @@ public class MemoryGameFragment extends Fragment {
                 tileAdapter.notifyDataSetChanged();
             }
         });
-
         return view;
     }
 

@@ -16,9 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MemoryGameActivity extends BaseActivity implements StateListener {
+    private Difficulty level;
     private SoundManager soundManager;
-    private SettingsFragment settingsFragment;
     private MemoryGameFragment memoryGameFragment;
+    private SettingsFragment settingsFragment;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -30,6 +31,9 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
         setContentView(R.layout.activity_memory_game);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        level = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        soundManager = (SoundManager) getApplicationContext();
 
         FragmentManager fm = getSupportFragmentManager();
         memoryGameFragment = (MemoryGameFragment) fm.findFragmentById(R.id.memoryGameFragment);
@@ -77,12 +81,24 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
     @Override
     public void onPause() {
         super.onPause();
+        soundManager.pauseMusic();
+        soundManager.muteSound();
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (soundManager.isMusicOn()) {
+            soundManager.resumeMusic();
+        } else {
+            soundManager.pauseMusic();
+        }
+        if (soundManager.isSoundOn()) {
+            soundManager.unMuteSound();
+        } else {
+            soundManager.muteSound();
+        }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
@@ -94,14 +110,11 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
             case SETTINGS:
                 hideFragment(settingsFragment);
                 break;
-            case SHAKE:
             case RESTART:
                 intent = getIntent();
                 finish();
                 intent.putExtra("difficulty", level);
                 startActivity(intent);
-                break;
-            case CONTINUE:
                 break;
             case GAME_OVER:
                 intent = new Intent(this, ResultsActivity.class);
@@ -111,6 +124,12 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        memoryGameFragment.onDestroy();
     }
 
     public void showFragment(Fragment fragment) {
@@ -126,7 +145,9 @@ public class MemoryGameActivity extends BaseActivity implements StateListener {
     }
 
     void handleShakeEvent() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = getIntent();
+        finish();
+        intent.putExtra("difficulty", level);
         startActivity(intent);
     }
 }

@@ -17,8 +17,8 @@
         android:layout_marginEnd="6dp"
         android:layout_marginBottom="16dp"
         android:background="@color/colorBackground"
-        android:src="@android:drawable/ic_notification_clear_all"
-        android:contentDescription="@string/settings_button" />
+        android:contentDescription="@string/settings_button"
+        android:src="@android:drawable/ic_notification_clear_all" />
 
     <Switch
         android:id="@+id/musicSwitch"
@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:padding="10dp"
         android:checked="true"
+        android:padding="10dp"
         android:text="@string/music"
         android:textSize="18sp" />
 
@@ -39,31 +39,32 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:padding="10dp"
         android:checked="true"
+        android:padding="10dp"
         android:text="@string/sound"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <TextView
+        style="@style/settingsTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="bottom"
         android:layout_marginTop="16dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="@string/difficulty" />
+        android:gravity="bottom"
+        android:text="@string/difficulty"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <Spinner
         android:id="@+id/settingsdifficulty"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="top"
-        android:paddingStart="36dp"
-        android:paddingEnd="36dp"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="36dp"
-        android:entries="@array/difficultyLevels" />
+        android:entries="@array/difficultyLevels"
+        android:gravity="top"
+        android:paddingStart="36dp"
+        android:paddingEnd="36dp" />
 
 </LinearLayout>

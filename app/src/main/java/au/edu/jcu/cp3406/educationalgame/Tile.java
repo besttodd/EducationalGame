@@ -4,24 +4,24 @@ import android.graphics.Bitmap;
 
 class Tile {
     private Bitmap shape;
-    private Bitmap lightedImage;
-    private Bitmap activeTile;
+    private Bitmap lightedShape;
+    private Bitmap activeShape;
 
     Tile(Bitmap[] files) {
         shape = files[0];
-        lightedImage = files[1];
-        activeTile = shape;
+        lightedShape = files[1];
+        activeShape = shape;
     }
 
     void lightUp() {
-        activeTile = lightedImage;
+        activeShape = lightedShape;
     }
 
     void lightOff() {
-        activeTile = shape;
+        activeShape = shape;
     }
 
     Bitmap getActive() {
-        return activeTile;
+        return activeShape;
     }
 }

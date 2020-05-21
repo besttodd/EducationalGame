@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 public class TileAdapter extends BaseAdapter {
@@ -34,14 +35,15 @@ public class TileAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Tile tile = tiles[position];
 
+        GridView gv = (GridView) parent;
+        gv.setColumnWidth(200);
         if (convertView == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.tile, parent, false);
         }
 
-        ImageView imageView = convertView.findViewById(R.id.tileView);
+        ImageView imageView = convertView.findViewById(R.id.tileImageView);
         imageView.setImageBitmap(tile.getActive());
-
         return convertView;
     }
 }

@@ -51,25 +51,28 @@
                 android:text="@string/memory_master" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="42dp"
-            android:gravity="bottom"
-            android:text="@string/difficulty_label"
-            android:textColor="@color/white"
-            android:textSize="26sp" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/difficultySpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="26dp"
-            android:entries="@array/difficultyLevels"
-            android:gravity="top"
-            android:padding="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/difficulty_label"
+                android:textColor="@color/white"
+                android:textSize="26sp" />
+
+            <Spinner
+                android:id="@+id/difficultySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:entries="@array/difficultyLevels"
+                android:padding="16dp" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

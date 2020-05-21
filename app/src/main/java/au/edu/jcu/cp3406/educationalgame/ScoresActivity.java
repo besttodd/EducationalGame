@@ -10,19 +10,24 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;
 
-public class ScoresActivity extends BaseActivity implements StateListener {
+public class ScoresActivity extends BaseActivity {
     public static int SETTINGS_REQUEST = 222;
+    private Difficulty level = Difficulty.MEDIUM;
     private Game game = Game.MATHS;  //Which game to restart
+    private SoundManager soundManager;
+    private ViewPager pager;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -42,6 +47,8 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         settingsFragment = fm.findFragmentById(R.id.settingsFragment);
         hideFragment(settingsFragment);*/
 
+        soundManager = (SoundManager) getApplicationContext();
+
         //ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager != null) {
@@ -57,7 +64,7 @@ public class ScoresActivity extends BaseActivity implements StateListener {
         });
 
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager pager = findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -71,28 +78,32 @@ public class ScoresActivity extends BaseActivity implements StateListener {
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("pagerPosition", pager.getCurrentItem());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        soundManager.pauseMusic();
         mSensorManager.unregisterListener(mShakeDetector);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-    }
-
-    @Override
-    public void onUpdate(State state, Difficulty level) {
-        //SHAKE is only state event on this activity
-        Intent intent;
-        if (game.equals(Game.MATHS)) {
-            intent = new Intent(this, MathsGameActivity.class);
+        if (soundManager.isMusicOn()) {
+            soundManager.resumeMusic();
         } else {
-            intent = new Intent(this, MemoryGameActivity.class);
+            soundManager.pauseMusic();
         }
-        intent.putExtra("difficulty", level);
-        startActivity(intent);
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     private static class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -122,10 +133,22 @@ public class ScoresActivity extends BaseActivity implements StateListener {
                     return "BLANK";
             }
         }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
+        }
     }
 
     void handleShakeEvent() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent;
+        if (game.equals(Game.MATHS)) {
+            intent = new Intent(this, MathsGameActivity.class);
+        } else {
+            intent = new Intent(this, MemoryGameActivity.class);
+        }
+        intent.putExtra("difficulty", level);
         startActivity(intent);
     }
 }

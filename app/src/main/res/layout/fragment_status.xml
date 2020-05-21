@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
+    android:orientation="vertical"
     tools:context=".StatusFragment">
 
     <TextView
@@ -13,9 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="@string/default_time" />
+        android:text="@string/default_time"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/scoreDisplay"
@@ -23,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="@string/default_score" />
+        android:text="@string/default_score"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 </LinearLayout>

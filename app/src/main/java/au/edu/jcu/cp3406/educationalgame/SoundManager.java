@@ -8,15 +8,16 @@ import android.util.Log;
 public class SoundManager extends Application {
     private SoundPool soundPool;
     private int[] sounds;
-    int soundOn;
+    int sound;
+    boolean soundOn;
     private boolean musicOn;
     private int streamId;
     private boolean loaded;
 
     public SoundManager() {
         sounds = new int[4];
-        soundOn = 1;
-        musicOn = true;
+        sound = 1;
+        soundOn = true;
         streamId = -1;
 
         soundPool = new SoundPool(5, android.media.AudioManager.STREAM_MUSIC, 0);
@@ -48,64 +49,59 @@ public class SoundManager extends Application {
     }
 
     public void playSound(int soundNum) {
-        soundPool.play(sounds[soundNum], soundOn, soundOn, 1, 0, 1);
+        soundPool.play(sounds[soundNum], sound, sound, 1, 0, 1);
     }
 
     public void playMusic() {
         streamId = soundPool.play(sounds[2], 1, 1, 1, 10, 1);
+        musicOn = true;
+    }
+
+    public void toggleSound() {
+        if (soundOn) {
+            muteSound();
+            soundOn = false;
+        } else {
+            unMuteSound();
+            soundOn = true;
+        }
     }
 
     public void toggleMusic() {
         if (musicOn) {
-            muteMusic();
+            pauseMusic();
+            musicOn = false;
         } else {
-            unMuteMusic();
-        }
-    }
-
-    public void toggleSound() {
-        if (soundOn == 1) {
-            muteSound();
-            soundOn = 0;
-        } else {
-            unMuteSound();
-            soundOn = 1;
+            resumeMusic();
+            musicOn = true;
         }
     }
 
     void muteSound() {
-        soundOn = 0;
+        sound = 0;
     }
 
     void unMuteSound() {
-        soundOn = 1;
+        sound = 1;
     }
 
-    void muteMusic() {
+    void pauseMusic() {
         soundPool.pause(streamId);
-        musicOn = false;
     }
 
-    void unMuteMusic() {
+    void resumeMusic() {
         soundPool.resume(streamId);
-        musicOn = true;
     }
+
+    public boolean isSoundOn() { return soundOn; }
 
     public boolean isMusicOn() {
         return musicOn;
     }
 
-    public int isSoundOn() {
-        return soundOn;
-    }
-
-    /*boolean audioReady() {
-        return loaded;
-    }*/
-
-    void closeAudio() {
+    /*void closeAudio() {
         sounds = null;
         soundPool.release();
         soundPool = null;
-    }
+    }*/
 }

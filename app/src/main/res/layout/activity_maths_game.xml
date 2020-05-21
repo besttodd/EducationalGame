@@ -11,8 +11,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_main"
-            android:id="@+id/toolbar" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_main" />
 
         <fragment
             android:id="@+id/statusFragment"
@@ -23,9 +24,9 @@
 
         <fragment
             android:id="@+id/gameFragment"
+            android:name="au.edu.jcu.cp3406.educationalgame.MathsGameFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="au.edu.jcu.cp3406.educationalgame.MathsGameFragment"
             tools:layout="@layout/fragment_maths_game" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

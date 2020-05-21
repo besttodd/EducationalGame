@@ -1,39 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryLight"
     tools:context=".Twitter_Activity">
 
-    <TextView
-        android:id="@+id/user_info"
-        android:text="user"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textAlignment="center"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryLight"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_main" />
+
+        <TextView
+            android:id="@+id/user_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="user"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:ignore="HardcodedText" />
+
+        <ListView
+            android:id="@+id/tweets"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5" />
+
+        <Button
+            android:id="@+id/authorise"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:onClick="authorise"
+            android:text="@string/authorize" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="au.edu.jcu.cp3406.educationalgame.SettingsFragment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_gravity="center"
+        android:tag="settingsFragment"
+        tools:layout="@layout/fragment_settings" />
 
-    <ListView
-        android:id="@+id/tweets"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5" />
-
-    <Button
-        android:id="@+id/authorise"
-        android:enabled="false"
-        android:text="@string/authorize"
-        android:onClick="authorise"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>
 

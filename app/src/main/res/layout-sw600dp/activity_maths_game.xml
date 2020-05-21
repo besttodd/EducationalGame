@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/colorPrimaryLight"
-android:orientation="vertical">
-
-<include
-    android:id="@+id/toolbar"
-    layout="@layout/toolbar_main" />
-
-<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false">
+    android:background="@color/colorPrimaryLight"
+    android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/gameFragment"
-        android:name="au.edu.jcu.cp3406.educationalgame.MathsGameFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@layout/activity_maths_game" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_main" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <fragment
-            android:id="@+id/statusFragment"
-            android:name="au.edu.jcu.cp3406.educationalgame.StatusFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/gameFragment"
+            android:name="au.edu.jcu.cp3406.educationalgame.MathsGameFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            tools:layout="@layout/fragment_status" />
+            tools:layout="@layout/activity_maths_game" />
 
-        <fragment
-            android:id="@+id/settingsFragment"
-            android:name="au.edu.jcu.cp3406.educationalgame.SettingsFragment"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="settingsFragment"
-            tools:layout="@layout/fragment_settings" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <fragment
+                android:id="@+id/statusFragment"
+                android:name="au.edu.jcu.cp3406.educationalgame.StatusFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:layout="@layout/fragment_status" />
+
+            <fragment
+                android:id="@+id/settingsFragment"
+                android:name="au.edu.jcu.cp3406.educationalgame.SettingsFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:tag="settingsFragment"
+                tools:layout="@layout/fragment_settings" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -21,6 +21,7 @@ class MemoryGame {
         speed = 1500;
     }
 
+    //set the number of tiles displayed and the speed the sequence is displayed depending on difficulty
     List<Integer> newGame(Difficulty level) {
         switch (level) {
             case EASY:

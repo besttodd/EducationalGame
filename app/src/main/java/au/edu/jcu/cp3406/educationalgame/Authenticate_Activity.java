@@ -32,7 +32,7 @@ public class Authenticate_Activity extends BaseActivity {
 
                 info.setText(getString(R.string.working));
                 String message;
-                if (url.startsWith("https://cp3406.game.net/")) {
+                if (url.startsWith("http://jsplayground.crunchycodes.net")) {
                     Uri uri = Uri.parse(url);
                     oauthVerifier = uri.getQueryParameter("oauth_verifier");
                     if (oauthVerifier != null) {

@@ -17,11 +17,9 @@ import java.util.Objects;
 public class MathsGameFragment extends Fragment {
     private static final int POINTS_CORRECT = 10;
     private static final int POINTS_INCORRECT = -10;
-    private SoundManager soundManager;
     private Difficulty level;
+    private SoundManager soundManager;
     private MathsGame game;
-
-    private Context context;
     private Button card1;
     private Button card2;
     private ImageView mark;
@@ -34,7 +32,6 @@ public class MathsGameFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
         soundManager = ((SoundManager) context.getApplicationContext());
         game = new MathsGame();
     }
@@ -46,25 +43,19 @@ public class MathsGameFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_maths_game, container, false);
 
         level = (Difficulty) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("difficulty");
-        soundManager = ((SoundManager) context.getApplicationContext());
-
-        statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragment);
-        assert statusFragment != null;
         mark = view.findViewById(R.id.markImage);
+        card1 = view.findViewById(R.id.card1Button);
+        card2 = view.findViewById(R.id.card2Button);
         Button equals = view.findViewById(R.id.equalButton);
         if (level == Difficulty.MASTER) {
             equals.setVisibility(View.VISIBLE);
         }
-        card1 = view.findViewById(R.id.card1Button);
-        card2 = view.findViewById(R.id.card2Button);
-
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkSelected(v);
             }
         });
-
         card2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +63,12 @@ public class MathsGameFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        statusFragment = (StatusFragment) Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.statusFragment);
     }
 
     void newRound(Difficulty level) {
@@ -114,12 +111,12 @@ public class MathsGameFragment extends Fragment {
         newRound(level);
     }
 
-    int getScore() {
-        return game.getScore();
-    }
-
     void setScore(int score) {
         game.setScore(score);
         statusFragment.setScore(String.format("Score: %s", Integer.toString(game.getScore())), "0");
+    }
+
+    int getScore() {
+        return game.getScore();
     }
 }

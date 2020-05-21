@@ -1,18 +1,6 @@
 package au.edu.jcu.cp3406.educationalgame;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.util.Log;
-import android.widget.TextView;
-
 import org.junit.Test;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -27,9 +15,10 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
+    @Test
     public void checkHigher() {
-        String task = "Higher";
-        int selected = 2;  //3=EQUALS Button, 2=Card 2, 1=Card 1
+        /*String task = "Higher";
+        int selected = 2;  //3=>EQUALS Button, 2=>Card2, 1=>Card1
         int c1Answer = 5;
         int c2Answer = 3;
         boolean correct = false;
@@ -54,6 +43,6 @@ public class ExampleUnitTest {
         }
         correct = false;
 
-        assertEquals(false, correct);
+        assertEquals(false, correct);*/
     }
 }
